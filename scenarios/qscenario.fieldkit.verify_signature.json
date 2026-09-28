@@ -1,0 +1,34 @@
+{
+  "schema": "qp1ng.marketplace.package.v1",
+  "id": "qscenario.fieldkit.verify_signature",
+  "kind": "scenario",
+  "name": "Field Kit: Verify Received Evidence",
+  "summary": "Verify input.bin with signer.pub and input.minisig using the reviewed signature tool. Trust the public key independently. No automatic download or sharing.",
+  "category": "Field Kit workflows",
+  "risk": "MEDIUM",
+  "version": 1,
+  "scenario": {
+    "id": "qscenario.fieldkit.verify_signature",
+    "name": "Field Kit: Verify Received Evidence",
+    "description": "Verify input.bin with signer.pub and input.minisig using the reviewed signature tool. Trust the public key independently. No automatic download or sharing.",
+    "enabled": false,
+    "trigger": {
+      "type": "MANUAL",
+      "label": "Manual",
+      "expression": ""
+    },
+    "conditions": [],
+    "actions": [
+      {
+        "type": "RUN_ACTION_FORGE_TOOL",
+        "toolId": "fieldkit.signature_verify",
+        "timeoutMs": 90000
+      }
+    ],
+    "createdAtMs": 0,
+    "updatedAtMs": 0,
+    "lastRunAtMs": null,
+    "runCount": 0
+  },
+  "files": {}
+}

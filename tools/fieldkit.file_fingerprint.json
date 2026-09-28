@@ -1,0 +1,122 @@
+{
+  "schema": "qp1ng.marketplace.package.v1",
+  "id": "fieldkit.file_fingerprint",
+  "kind": "tool",
+  "name": "File Fingerprint",
+  "summary": "Identify one file and calculate SHA-256 and BLAKE3 without modifying it. Maximum 32 MiB; hashes show byte equality, not authenticity. Install: file, b3sum.",
+  "category": "Evidence",
+  "risk": "MEDIUM",
+  "version": 1,
+  "scenario": null,
+  "files": {
+    "manifest.json": {
+      "schema": "qp1ng.tool.v1",
+      "id": "fieldkit.file_fingerprint",
+      "name": "File Fingerprint",
+      "version": "1.0.0",
+      "author": "Q-P1NG community",
+      "category": "workspace",
+      "description": "Identify one file and calculate SHA-256 and BLAKE3 without modifying it. Maximum 32 MiB; hashes show byte equality, not authenticity. Install: file, b3sum. Place input.bin in /workspace/fieldkit. Starts disabled. Review and enable in Action Forge. Results stay local unless you explicitly share them.",
+      "icon": {
+        "type": "auto",
+        "glyph": "document",
+        "accent": "cyan"
+      },
+      "permissions": {
+        "sandboxExecution": true,
+        "workspaceRead": true,
+        "workspaceWrite": false,
+        "network": false,
+        "keyboardShortcut": true,
+        "chatBubble": true,
+        "androidAction": false,
+        "securityLab": false
+      },
+      "network": null,
+      "securityLab": null,
+      "inputs": [
+        {
+          "name": "setup",
+          "type": "template",
+          "value": "Install: file, b3sum. Place input.bin in /workspace/fieldkit. ",
+          "required": true
+        }
+      ],
+      "policy": {
+        "risk": "MEDIUM",
+        "executionMode": "OFF",
+        "networkDefault": false
+      }
+    },
+    "actions.json": {
+      "schema": "qp1ng.flow.v1",
+      "nodes": [
+        {
+          "id": "input",
+          "type": "input.manual",
+          "config": {
+            "value": ""
+          },
+          "outputs": [
+            {
+              "id": "out",
+              "targets": [
+                "process:in"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "process",
+          "type": "process.bash",
+          "config": {
+            "command": "set -eu\numask 077\nexport LC_ALL=C\nbase=/workspace/fieldkit\n[ -d \"$base\" ] && [ ! -L \"$base\" ] || { printf 'Create the fieldkit folder in the sandbox workspace first.\\n' >&2; exit 2; }\ncd \"$base\"\nneed() {\n  command -v \"$1\" >/dev/null 2>&1 || { printf 'Missing command: %s. Install the packages listed in this tool.\\n' \"$1\" >&2; exit 127; }\n}\ncheck_file() {\n  [ -f \"$1\" ] && [ ! -L \"$1\" ] || { printf 'Required regular file missing: %s\\n' \"$1\" >&2; exit 2; }\n  bytes=$(wc -c < \"$1\")\n  [ \"$bytes\" -gt 0 ] && [ \"$bytes\" -le \"$2\" ] || { printf 'Input is empty or exceeds this tool size limit.\\n' >&2; exit 2; }\n}\nneed file\nneed b3sum\ncheck_file input.bin 33554432\nprintf 'FILE TYPE\\n'\nfile --brief --mime-type ./input.bin\nprintf '\\nSHA-256\\n'\nsha256sum ./input.bin\nprintf '\\nBLAKE3\\n'\nb3sum --no-mmap ./input.bin\n",
+            "timeout": 30
+          },
+          "outputs": [
+            {
+              "id": "out",
+              "targets": [
+                "output:in"
+              ]
+            },
+            {
+              "id": "error",
+              "targets": [
+                "error:in"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "output",
+          "type": "output.chat_bubble",
+          "config": {},
+          "outputs": []
+        },
+        {
+          "id": "error",
+          "type": "output.show_error",
+          "config": {},
+          "outputs": []
+        }
+      ],
+      "metadata": {
+        "name": "File Fingerprint",
+        "description": "Reviewed Field Kit workflow; fixed local inputs and finite runtime.",
+        "createdBy": "qp1ng-community",
+        "version": 1
+      }
+    },
+    "bubble.json": {
+      "schema": "qp1ng.bubble.v1",
+      "title": "File Fingerprint",
+      "style": "code_output",
+      "language": "text",
+      "showCommand": true,
+      "showExitCode": true,
+      "showRuntime": true,
+      "showAddToChat": true
+    }
+  }
+}

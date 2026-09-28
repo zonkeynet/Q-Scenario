@@ -1,0 +1,34 @@
+{
+  "schema": "qp1ng.marketplace.package.v1",
+  "id": "qscenario.fieldkit.fingerprint",
+  "kind": "scenario",
+  "name": "Field Kit: Fingerprint a File",
+  "summary": "Read a local file fingerprint. Requires the reviewed File Fingerprint tool and input.bin in /workspace/fieldkit.",
+  "category": "Field Kit workflows",
+  "risk": "MEDIUM",
+  "version": 1,
+  "scenario": {
+    "id": "qscenario.fieldkit.fingerprint",
+    "name": "Field Kit: Fingerprint a File",
+    "description": "Read a local file fingerprint. Requires the reviewed File Fingerprint tool and input.bin in /workspace/fieldkit.",
+    "enabled": false,
+    "trigger": {
+      "type": "MANUAL",
+      "label": "Manual",
+      "expression": ""
+    },
+    "conditions": [],
+    "actions": [
+      {
+        "type": "RUN_ACTION_FORGE_TOOL",
+        "toolId": "fieldkit.file_fingerprint",
+        "timeoutMs": 90000
+      }
+    ],
+    "createdAtMs": 0,
+    "updatedAtMs": 0,
+    "lastRunAtMs": null,
+    "runCount": 0
+  },
+  "files": {}
+}

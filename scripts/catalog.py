@@ -9,6 +9,11 @@ FIELDS = {'schema','id','kind','name','summary','category','risk','version','sce
 FILES = {'manifest.json','actions.json','variables.json','keyboard.json','bubble.json','ui.json'}
 ID = re.compile(r'[a-z0-9][a-z0-9_.-]{2,95}\Z')
 
+def minimum_app_code(package):
+    # Field Kit requires inline script policy validation in Pro 1.0.174.
+    # This is an app compatibility floor, not a pinned upstream Linux package version.
+    return 175 if package['id'].startswith(('fieldkit.', 'qscenario.fieldkit.')) else 172
+
 def require(ok, message):
     if not ok:
         raise ValueError(message)
@@ -58,8 +63,8 @@ def validate(package):
         require(type(s) is dict and package['files']=={},'Scenario body')
         require(s.get('id')==package['id'] and s.get('name')==package['name'],'Scenario identity')
         require(s.get('enabled') is False and s.get('runCount')==0 and s.get('lastRunAtMs') is None,'Scenario must be disabled')
-        require(type(s.get('actions')) is list and 1<=len(s['actions'])<=64,'Action count')
-        require(type(s.get('conditions')) is list and len(s['conditions'])<=32,'Condition count')
+        require(type(s.get('actions')) is list and 1<=len(s['actions'])<=20,'Action count')
+        require(type(s.get('conditions')) is list and len(s['conditions'])<=5,'Condition count')
         require(type(s.get('trigger')) is dict and type(s['trigger'].get('type')) is str,'Trigger')
         for action in s['actions']:
             require(type(action) is dict and type(action.get('type')) is str,'Action')
@@ -94,7 +99,7 @@ def build_index(root):
             raw=path.read_bytes(); package=validate(load(raw))
             require(path.relative_to(root).as_posix()==package_path(package),'Filename mismatch')
             entry={k:package[k] for k in ('id','kind','name','summary','category','risk','version')}
-            entry.update(path=package_path(package),bytes=len(raw),sha256=hashlib.sha256(raw).hexdigest(),minAppCode=172)
+            entry.update(path=package_path(package),bytes=len(raw),sha256=hashlib.sha256(raw).hexdigest(),minAppCode=minimum_app_code(package))
             entries.append(entry)
     require(len(entries)<=500,'Catalog count')
     result={'schema':'qp1ng.marketplace.index.v1','entries':sorted(entries,key=lambda e:(e['kind'],e['id']))}

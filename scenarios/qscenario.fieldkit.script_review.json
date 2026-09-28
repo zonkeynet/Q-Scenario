@@ -1,0 +1,34 @@
+{
+  "schema": "qp1ng.marketplace.package.v1",
+  "id": "qscenario.fieldkit.script_review",
+  "kind": "scenario",
+  "name": "Field Kit: Review a Shell Script",
+  "summary": "Run the reviewed Shell Script Review tool on input.sh without executing the script. Findings remain in the local result.",
+  "category": "Field Kit workflows",
+  "risk": "MEDIUM",
+  "version": 1,
+  "scenario": {
+    "id": "qscenario.fieldkit.script_review",
+    "name": "Field Kit: Review a Shell Script",
+    "description": "Run the reviewed Shell Script Review tool on input.sh without executing the script. Findings remain in the local result.",
+    "enabled": false,
+    "trigger": {
+      "type": "MANUAL",
+      "label": "Manual",
+      "expression": ""
+    },
+    "conditions": [],
+    "actions": [
+      {
+        "type": "RUN_ACTION_FORGE_TOOL",
+        "toolId": "fieldkit.shell_review",
+        "timeoutMs": 90000
+      }
+    ],
+    "createdAtMs": 0,
+    "updatedAtMs": 0,
+    "lastRunAtMs": null,
+    "runCount": 0
+  },
+  "files": {}
+}

@@ -1,0 +1,41 @@
+{
+  "schema": "qp1ng.marketplace.package.v1",
+  "id": "qscenario.fieldkit.battery_low",
+  "kind": "scenario",
+  "name": "Field Kit: Low Battery Reminder",
+  "summary": "At the 20% battery crossing, remind the operator to defer optional heavy analysis. Does not stop calls, transfers, radios or other active tools.",
+  "category": "Field Kit reminders",
+  "risk": "LOW",
+  "version": 1,
+  "scenario": {
+    "id": "qscenario.fieldkit.battery_low",
+    "name": "Field Kit: Low Battery Reminder",
+    "description": "At the 20% battery crossing, remind the operator to defer optional heavy analysis. Does not stop calls, transfers, radios or other active tools.",
+    "enabled": false,
+    "trigger": {
+      "type": "BATTERY_LEVEL_LOW",
+      "label": "Battery Level Low",
+      "expression": "20"
+    },
+    "conditions": [
+      {
+        "type": "BATTERY_RANGE",
+        "name": "Battery at or below 20%",
+        "min": 0,
+        "max": 20
+      }
+    ],
+    "actions": [
+      {
+        "type": "SHOW_NOTIFICATION",
+        "title": "Field Kit",
+        "text": "Battery is low. Consider postponing optional OCR and large-file analysis."
+      }
+    ],
+    "createdAtMs": 0,
+    "updatedAtMs": 0,
+    "lastRunAtMs": null,
+    "runCount": 0
+  },
+  "files": {}
+}

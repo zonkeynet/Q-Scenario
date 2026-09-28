@@ -1,6 +1,10 @@
 # Q-Scenario community catalog
 
-Field workflows and Action Forge tools for Q-P1NG. The catalog contains 18 scenarios and 19 tools, migrated from the app's bundled examples. Q-P1NG retains three scenarios and three tools for first use without a network.
+Field workflows and Action Forge tools for Q-P1NG. The catalog contains **30 scenarios and 33 tools**. This includes the original 37 examples and the new **Field Kit: 12 scenarios and 14 tools** for the Linux Sandbox tool packs. Q-P1NG retains three scenarios and three tools for first use without a network.
+
+Start with the [Field Kit guide](docs/FIELD_KIT.md): required packages, local input files, manual review steps, and event/condition/action examples. Field Kit requires **Pro 1.0.174 (app code 175)** or newer; existing examples remain available from app code 172. No app update is needed if you already have 1.0.174: refresh the catalog explicitly through Tor.
+
+The [validation report](docs/FIELD_KIT_TESTING.md) describes the checks on Android 11 and Android 17, including script policy, local commands and manual workflows.
 
 ## In Q-P1NG
 
@@ -38,5 +42,7 @@ python scripts/catalog.py --check
 ```
 
 The format is strict JSON (not executable YAML), maximum 256 KiB per package/index, maximum 500 catalog entries, nesting depth 32. Paths are derived from validated IDs; entries cannot write workflows or binaries. The privileged submission job checks out only the default branch and reads issue data through the event/API, never shell interpolation. Actions are pinned to a verified upstream commit; no persistent checkout credential is left behind.
+
+Scenarios follow the Android limits of **20 actions and 5 conditions**. `scripts/catalog.py` assigns the compatibility floor and regenerates the exact package byte counts and SHA-256 hashes. The Field Kit tests also verify dependencies, tool references, disabled imports, bounded commands and the separation between automatic reminders and manual executable workflows. CI validates script data; it never executes submitted shell code.
 
 `Offline Mode` is an example that sets local QVars; it does not disable Android radios. Draft scenarios, lab templates and network examples require configuration and deliberate activation. There are no automatic wipe examples. The passphrase sample uses 28 independently selected words from its 24-word demonstration dictionary (about 128 bits before any user changes); do not shorten it while retaining the security claim.

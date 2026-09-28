@@ -1,0 +1,122 @@
+{
+  "schema": "qp1ng.marketplace.package.v1",
+  "id": "fieldkit.sqlite_check",
+  "kind": "tool",
+  "name": "SQLite Read-Only Check",
+  "summary": "Run a read-only SQLite quick check and list up to 40 table/view names. Does not print row contents. Maximum 32 MiB. Use a consistent exported database, not a copied live database without its WAL. Install: sqlite.",
+  "category": "Data analysis",
+  "risk": "MEDIUM",
+  "version": 1,
+  "scenario": null,
+  "files": {
+    "manifest.json": {
+      "schema": "qp1ng.tool.v1",
+      "id": "fieldkit.sqlite_check",
+      "name": "SQLite Read-Only Check",
+      "version": "1.0.0",
+      "author": "Q-P1NG community",
+      "category": "workspace",
+      "description": "Run a read-only SQLite quick check and list up to 40 table/view names. Does not print row contents. Maximum 32 MiB. Use a consistent exported database, not a copied live database without its WAL. Install: sqlite. Place input.db in /workspace/fieldkit. Starts disabled. Review and enable in Action Forge. Results stay local unless you explicitly share them.",
+      "icon": {
+        "type": "auto",
+        "glyph": "terminal",
+        "accent": "cyan"
+      },
+      "permissions": {
+        "sandboxExecution": true,
+        "workspaceRead": true,
+        "workspaceWrite": false,
+        "network": false,
+        "keyboardShortcut": true,
+        "chatBubble": true,
+        "androidAction": false,
+        "securityLab": false
+      },
+      "network": null,
+      "securityLab": null,
+      "inputs": [
+        {
+          "name": "setup",
+          "type": "template",
+          "value": "Install: sqlite. Place input.db in /workspace/fieldkit. ",
+          "required": true
+        }
+      ],
+      "policy": {
+        "risk": "MEDIUM",
+        "executionMode": "OFF",
+        "networkDefault": false
+      }
+    },
+    "actions.json": {
+      "schema": "qp1ng.flow.v1",
+      "nodes": [
+        {
+          "id": "input",
+          "type": "input.manual",
+          "config": {
+            "value": ""
+          },
+          "outputs": [
+            {
+              "id": "out",
+              "targets": [
+                "process:in"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "process",
+          "type": "process.bash",
+          "config": {
+            "command": "set -eu\numask 077\nexport LC_ALL=C\nbase=/workspace/fieldkit\n[ -d \"$base\" ] && [ ! -L \"$base\" ] || { printf 'Create the fieldkit folder in the sandbox workspace first.\\n' >&2; exit 2; }\ncd \"$base\"\nneed() {\n  command -v \"$1\" >/dev/null 2>&1 || { printf 'Missing command: %s. Install the packages listed in this tool.\\n' \"$1\" >&2; exit 127; }\n}\ncheck_file() {\n  [ -f \"$1\" ] && [ ! -L \"$1\" ] || { printf 'Required regular file missing: %s\\n' \"$1\" >&2; exit 2; }\n  bytes=$(wc -c < \"$1\")\n  [ \"$bytes\" -gt 0 ] && [ \"$bytes\" -le \"$2\" ] || { printf 'Input is empty or exceeds this tool size limit.\\n' >&2; exit 2; }\n}\nneed sqlite3\ncheck_file input.db 33554432\nsqlite3 -batch -readonly ./input.db \"PRAGMA busy_timeout=2000; PRAGMA query_only=ON; PRAGMA quick_check; SELECT type,name FROM sqlite_schema WHERE type IN ('table','view') ORDER BY type,name LIMIT 40;\"\n",
+            "timeout": 30
+          },
+          "outputs": [
+            {
+              "id": "out",
+              "targets": [
+                "output:in"
+              ]
+            },
+            {
+              "id": "error",
+              "targets": [
+                "error:in"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "output",
+          "type": "output.chat_bubble",
+          "config": {},
+          "outputs": []
+        },
+        {
+          "id": "error",
+          "type": "output.show_error",
+          "config": {},
+          "outputs": []
+        }
+      ],
+      "metadata": {
+        "name": "SQLite Read-Only Check",
+        "description": "Reviewed Field Kit workflow; fixed local inputs and finite runtime.",
+        "createdBy": "qp1ng-community",
+        "version": 1
+      }
+    },
+    "bubble.json": {
+      "schema": "qp1ng.bubble.v1",
+      "title": "SQLite Read-Only Check",
+      "style": "code_output",
+      "language": "text",
+      "showCommand": true,
+      "showExitCode": true,
+      "showRuntime": true,
+      "showAddToChat": true
+    }
+  }
+}

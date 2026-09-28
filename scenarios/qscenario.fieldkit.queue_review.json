@@ -1,0 +1,34 @@
+{
+  "schema": "qp1ng.marketplace.package.v1",
+  "id": "qscenario.fieldkit.queue_review",
+  "kind": "scenario",
+  "name": "Field Kit: Queue a Review Reminder",
+  "summary": "Set one local pending flag for the charging reminder example. No file paths or report contents are stored.",
+  "category": "Field Kit workflows",
+  "risk": "LOW",
+  "version": 1,
+  "scenario": {
+    "id": "qscenario.fieldkit.queue_review",
+    "name": "Field Kit: Queue a Review Reminder",
+    "description": "Set one local pending flag for the charging reminder example. No file paths or report contents are stored.",
+    "enabled": false,
+    "trigger": {
+      "type": "MANUAL",
+      "label": "Manual",
+      "expression": ""
+    },
+    "conditions": [],
+    "actions": [
+      {
+        "type": "SET_QVAR",
+        "name": "%Q_FIELDKIT_REVIEW_PENDING",
+        "value": "true"
+      }
+    ],
+    "createdAtMs": 0,
+    "updatedAtMs": 0,
+    "lastRunAtMs": null,
+    "runCount": 0
+  },
+  "files": {}
+}

@@ -1,0 +1,41 @@
+{
+  "schema": "qp1ng.marketplace.package.v1",
+  "id": "qscenario.fieldkit.ocr_ready",
+  "kind": "scenario",
+  "name": "Field Kit: OCR with Battery Check",
+  "summary": "Run reviewed Offline English OCR only when battery is at least 20%. Prepare input.png. A manual battery condition example; no background OCR.",
+  "category": "Field Kit workflows",
+  "risk": "MEDIUM",
+  "version": 1,
+  "scenario": {
+    "id": "qscenario.fieldkit.ocr_ready",
+    "name": "Field Kit: OCR with Battery Check",
+    "description": "Run reviewed Offline English OCR only when battery is at least 20%. Prepare input.png. A manual battery condition example; no background OCR.",
+    "enabled": false,
+    "trigger": {
+      "type": "MANUAL",
+      "label": "Manual",
+      "expression": ""
+    },
+    "conditions": [
+      {
+        "type": "BATTERY_RANGE",
+        "name": "Battery at least 20%",
+        "min": 20,
+        "max": 100
+      }
+    ],
+    "actions": [
+      {
+        "type": "RUN_ACTION_FORGE_TOOL",
+        "toolId": "fieldkit.offline_ocr",
+        "timeoutMs": 90000
+      }
+    ],
+    "createdAtMs": 0,
+    "updatedAtMs": 0,
+    "lastRunAtMs": null,
+    "runCount": 0
+  },
+  "files": {}
+}

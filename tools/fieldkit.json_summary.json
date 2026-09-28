@@ -1,0 +1,122 @@
+{
+  "schema": "qp1ng.marketplace.package.v1",
+  "id": "fieldkit.json_summary",
+  "kind": "tool",
+  "name": "JSON Structure Summary",
+  "summary": "Validate exactly one JSON document and summarize its top-level type, size and up to 40 keys. Values are not printed. Maximum 2 MiB. Empty input and multiple JSON documents are rejected. Install: jq.",
+  "category": "Data analysis",
+  "risk": "MEDIUM",
+  "version": 1,
+  "scenario": null,
+  "files": {
+    "manifest.json": {
+      "schema": "qp1ng.tool.v1",
+      "id": "fieldkit.json_summary",
+      "name": "JSON Structure Summary",
+      "version": "1.0.0",
+      "author": "Q-P1NG community",
+      "category": "workspace",
+      "description": "Validate exactly one JSON document and summarize its top-level type, size and up to 40 keys. Values are not printed. Maximum 2 MiB. Empty input and multiple JSON documents are rejected. Install: jq. Place input.json in /workspace/fieldkit. Starts disabled. Review and enable in Action Forge. Results stay local unless you explicitly share them.",
+      "icon": {
+        "type": "auto",
+        "glyph": "terminal",
+        "accent": "cyan"
+      },
+      "permissions": {
+        "sandboxExecution": true,
+        "workspaceRead": true,
+        "workspaceWrite": false,
+        "network": false,
+        "keyboardShortcut": true,
+        "chatBubble": true,
+        "androidAction": false,
+        "securityLab": false
+      },
+      "network": null,
+      "securityLab": null,
+      "inputs": [
+        {
+          "name": "setup",
+          "type": "template",
+          "value": "Install: jq. Place input.json in /workspace/fieldkit. ",
+          "required": true
+        }
+      ],
+      "policy": {
+        "risk": "MEDIUM",
+        "executionMode": "OFF",
+        "networkDefault": false
+      }
+    },
+    "actions.json": {
+      "schema": "qp1ng.flow.v1",
+      "nodes": [
+        {
+          "id": "input",
+          "type": "input.manual",
+          "config": {
+            "value": ""
+          },
+          "outputs": [
+            {
+              "id": "out",
+              "targets": [
+                "process:in"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "process",
+          "type": "process.bash",
+          "config": {
+            "command": "set -eu\numask 077\nexport LC_ALL=C\nbase=/workspace/fieldkit\n[ -d \"$base\" ] && [ ! -L \"$base\" ] || { printf 'Create the fieldkit folder in the sandbox workspace first.\\n' >&2; exit 2; }\ncd \"$base\"\nneed() {\n  command -v \"$1\" >/dev/null 2>&1 || { printf 'Missing command: %s. Install the packages listed in this tool.\\n' \"$1\" >&2; exit 127; }\n}\ncheck_file() {\n  [ -f \"$1\" ] && [ ! -L \"$1\" ] || { printf 'Required regular file missing: %s\\n' \"$1\" >&2; exit 2; }\n  bytes=$(wc -c < \"$1\")\n  [ \"$bytes\" -gt 0 ] && [ \"$bytes\" -le \"$2\" ] || { printf 'Input is empty or exceeds this tool size limit.\\n' >&2; exit 2; }\n}\nneed jq\ncheck_file input.json 2097152\njq -M -s 'if length != 1 then error(\"Expected exactly one JSON document\") else .[0] | {type: type, entries: (if type == \"object\" or type == \"array\" then length else null end), keys: (if type == \"object\" then keys[:40] else [] end)} end' ./input.json\n",
+            "timeout": 20
+          },
+          "outputs": [
+            {
+              "id": "out",
+              "targets": [
+                "output:in"
+              ]
+            },
+            {
+              "id": "error",
+              "targets": [
+                "error:in"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "output",
+          "type": "output.chat_bubble",
+          "config": {},
+          "outputs": []
+        },
+        {
+          "id": "error",
+          "type": "output.show_error",
+          "config": {},
+          "outputs": []
+        }
+      ],
+      "metadata": {
+        "name": "JSON Structure Summary",
+        "description": "Reviewed Field Kit workflow; fixed local inputs and finite runtime.",
+        "createdBy": "qp1ng-community",
+        "version": 1
+      }
+    },
+    "bubble.json": {
+      "schema": "qp1ng.bubble.v1",
+      "title": "JSON Structure Summary",
+      "style": "code_output",
+      "language": "text",
+      "showCommand": true,
+      "showExitCode": true,
+      "showRuntime": true,
+      "showAddToChat": true
+    }
+  }
+}

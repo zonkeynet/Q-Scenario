@@ -1,0 +1,34 @@
+{
+  "schema": "qp1ng.marketplace.package.v1",
+  "id": "qscenario.fieldkit.wifi_lost",
+  "kind": "scenario",
+  "name": "Field Kit: Offline Work Reminder",
+  "summary": "On Wi-Fi disconnection, show a generic reminder about local tools. Does not change routing or start a connection.",
+  "category": "Field Kit reminders",
+  "risk": "LOW",
+  "version": 1,
+  "scenario": {
+    "id": "qscenario.fieldkit.wifi_lost",
+    "name": "Field Kit: Offline Work Reminder",
+    "description": "On Wi-Fi disconnection, show a generic reminder about local tools. Does not change routing or start a connection.",
+    "enabled": false,
+    "trigger": {
+      "type": "WIFI_DISCONNECTED",
+      "label": "Wifi Disconnected",
+      "expression": ""
+    },
+    "conditions": [],
+    "actions": [
+      {
+        "type": "SHOW_NOTIFICATION",
+        "title": "Field Kit",
+        "text": "Wi-Fi changed. Local file checks remain available; review the route before any download."
+      }
+    ],
+    "createdAtMs": 0,
+    "updatedAtMs": 0,
+    "lastRunAtMs": null,
+    "runCount": 0
+  },
+  "files": {}
+}

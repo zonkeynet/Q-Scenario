@@ -1,0 +1,34 @@
+{
+  "schema": "qp1ng.marketplace.package.v1",
+  "id": "qscenario.fieldkit.pdf_review",
+  "kind": "scenario",
+  "name": "Field Kit: Review a PDF",
+  "summary": "Inspect one PDF before sharing. Requires the reviewed PDF Structure Check tool and input.pdf. Does not send or rewrite the file.",
+  "category": "Field Kit workflows",
+  "risk": "MEDIUM",
+  "version": 1,
+  "scenario": {
+    "id": "qscenario.fieldkit.pdf_review",
+    "name": "Field Kit: Review a PDF",
+    "description": "Inspect one PDF before sharing. Requires the reviewed PDF Structure Check tool and input.pdf. Does not send or rewrite the file.",
+    "enabled": false,
+    "trigger": {
+      "type": "MANUAL",
+      "label": "Manual",
+      "expression": ""
+    },
+    "conditions": [],
+    "actions": [
+      {
+        "type": "RUN_ACTION_FORGE_TOOL",
+        "toolId": "fieldkit.pdf_check",
+        "timeoutMs": 90000
+      }
+    ],
+    "createdAtMs": 0,
+    "updatedAtMs": 0,
+    "lastRunAtMs": null,
+    "runCount": 0
+  },
+  "files": {}
+}

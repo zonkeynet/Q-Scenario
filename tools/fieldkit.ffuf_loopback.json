@@ -1,0 +1,141 @@
+{
+  "schema": "qp1ng.marketplace.package.v1",
+  "id": "fieldkit.ffuf_loopback",
+  "kind": "tool",
+  "name": "Loopback Web Lab",
+  "summary": "Test up to 20 simple path names on your own local server at 127.0.0.1:8080. One worker, two requests/second, 20-second limit. Requires explicit reviewed Open network policy in Security Lab; this tool never changes settings or starts a server. Install: ffuf.",
+  "category": "Security Lab",
+  "risk": "HIGH",
+  "version": 1,
+  "scenario": null,
+  "files": {
+    "manifest.json": {
+      "schema": "qp1ng.tool.v1",
+      "id": "fieldkit.ffuf_loopback",
+      "name": "Loopback Web Lab",
+      "version": "1.0.0",
+      "author": "Q-P1NG community",
+      "category": "security_lab",
+      "description": "Test up to 20 simple path names on your own local server at 127.0.0.1:8080. One worker, two requests/second, 20-second limit. Requires explicit reviewed Open network policy in Security Lab; this tool never changes settings or starts a server. Install: ffuf. Place words.txt in /workspace/fieldkit. Starts disabled. Review and enable in Action Forge. Results stay local unless you explicitly share them.",
+      "icon": {
+        "type": "auto",
+        "glyph": "shield",
+        "accent": "gold"
+      },
+      "permissions": {
+        "sandboxExecution": true,
+        "workspaceRead": true,
+        "workspaceWrite": false,
+        "network": true,
+        "keyboardShortcut": true,
+        "chatBubble": true,
+        "androidAction": false,
+        "securityLab": true
+      },
+      "network": {
+        "methods": [
+          "GET"
+        ],
+        "allowedHosts": [
+          "127.0.0.1:8080"
+        ],
+        "maxResponseBytes": 65536,
+        "timeoutSeconds": 2,
+        "requiresPreview": true,
+        "storeResponse": false,
+        "sendChatData": false
+      },
+      "securityLab": {
+        "requiresLabMode": true,
+        "requiresTargetAllowlist": true,
+        "maxTargets": 1,
+        "maxPorts": 1,
+        "rateLimit": "2 requests/second",
+        "noExploit": true
+      },
+      "inputs": [
+        {
+          "name": "setup",
+          "type": "template",
+          "value": "Install: ffuf. Place words.txt in /workspace/fieldkit. ",
+          "required": true
+        }
+      ],
+      "policy": {
+        "risk": "HIGH",
+        "executionMode": "OFF",
+        "networkDefault": false
+      }
+    },
+    "actions.json": {
+      "schema": "qp1ng.flow.v1",
+      "nodes": [
+        {
+          "id": "input",
+          "type": "input.manual",
+          "config": {
+            "value": ""
+          },
+          "outputs": [
+            {
+              "id": "out",
+              "targets": [
+                "process:in"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "process",
+          "type": "process.bash",
+          "config": {
+            "command": "set -eu\numask 077\nexport LC_ALL=C\nbase=/workspace/fieldkit\n[ -d \"$base\" ] && [ ! -L \"$base\" ] || { printf 'Create the fieldkit folder in the sandbox workspace first.\\n' >&2; exit 2; }\ncd \"$base\"\nneed() {\n  command -v \"$1\" >/dev/null 2>&1 || { printf 'Missing command: %s. Install the packages listed in this tool.\\n' \"$1\" >&2; exit 127; }\n}\ncheck_file() {\n  [ -f \"$1\" ] && [ ! -L \"$1\" ] || { printf 'Required regular file missing: %s\\n' \"$1\" >&2; exit 2; }\n  bytes=$(wc -c < \"$1\")\n  [ \"$bytes\" -gt 0 ] && [ \"$bytes\" -le \"$2\" ] || { printf 'Input is empty or exceeds this tool size limit.\\n' >&2; exit 2; }\n}\nneed ffuf\ncheck_file words.txt 2048\nawk 'NR > 20 || length($0) > 64 || $0 !~ /^[A-Za-z0-9_-]+$/ {exit 1} END {if (NR == 0) exit 1}' ./words.txt || { printf 'Use 1-20 simple alphanumeric path names, one per line.\\n' >&2; exit 2; }\nffuf -u http://127.0.0.1:8080/FUZZ -w ./words.txt -t 1 -rate 2 -maxtime 20 -timeout 2 -noninteractive -s -json -mc 200,204,301,302,401,403\n",
+            "timeout": 30
+          },
+          "outputs": [
+            {
+              "id": "out",
+              "targets": [
+                "output:in"
+              ]
+            },
+            {
+              "id": "error",
+              "targets": [
+                "error:in"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "output",
+          "type": "output.chat_bubble",
+          "config": {},
+          "outputs": []
+        },
+        {
+          "id": "error",
+          "type": "output.show_error",
+          "config": {},
+          "outputs": []
+        }
+      ],
+      "metadata": {
+        "name": "Loopback Web Lab",
+        "description": "Reviewed Field Kit workflow; fixed local inputs and finite runtime.",
+        "createdBy": "qp1ng-community",
+        "version": 1
+      }
+    },
+    "bubble.json": {
+      "schema": "qp1ng.bubble.v1",
+      "title": "Loopback Web Lab",
+      "style": "lab_report",
+      "language": "text",
+      "showCommand": true,
+      "showExitCode": true,
+      "showRuntime": true,
+      "showAddToChat": true
+    }
+  }
+}

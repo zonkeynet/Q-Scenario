@@ -1,0 +1,44 @@
+{
+  "schema": "qp1ng.marketplace.package.v1",
+  "id": "qscenario.fieldkit.charging_review",
+  "kind": "scenario",
+  "name": "Field Kit: Review When Charging",
+  "summary": "When charging starts and a review was queued, show a generic reminder and clear the pending flag. Does not run OCR or a tool automatically. Enable Android notifications for reminders.",
+  "category": "Field Kit reminders",
+  "risk": "LOW",
+  "version": 1,
+  "scenario": {
+    "id": "qscenario.fieldkit.charging_review",
+    "name": "Field Kit: Review When Charging",
+    "description": "When charging starts and a review was queued, show a generic reminder and clear the pending flag. Does not run OCR or a tool automatically. Enable Android notifications for reminders.",
+    "enabled": false,
+    "trigger": {
+      "type": "BATTERY_CHARGING",
+      "label": "Battery Charging",
+      "expression": ""
+    },
+    "conditions": [
+      {
+        "type": "QVAR_EQUALS",
+        "name": "%Q_FIELDKIT_REVIEW_PENDING",
+        "value": "true"
+      }
+    ],
+    "actions": [
+      {
+        "type": "SHOW_NOTIFICATION",
+        "title": "Field Kit",
+        "text": "A local review is pending. Open Field Kit when ready."
+      },
+      {
+        "type": "CLEAR_QVAR",
+        "name": "%Q_FIELDKIT_REVIEW_PENDING"
+      }
+    ],
+    "createdAtMs": 0,
+    "updatedAtMs": 0,
+    "lastRunAtMs": null,
+    "runCount": 0
+  },
+  "files": {}
+}

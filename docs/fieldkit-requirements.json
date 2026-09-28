@@ -1,0 +1,138 @@
+{
+  "minAppCode": 175,
+  "tools": {
+    "fieldkit.file_fingerprint": {
+      "packages": [
+        "file",
+        "b3sum"
+      ],
+      "inputs": [
+        "input.bin"
+      ],
+      "timeoutSeconds": 30
+    },
+    "fieldkit.metadata_report": {
+      "packages": [
+        "exiftool"
+      ],
+      "inputs": [
+        "input.bin"
+      ],
+      "timeoutSeconds": 30
+    },
+    "fieldkit.pdf_check": {
+      "packages": [
+        "qpdf"
+      ],
+      "inputs": [
+        "input.pdf"
+      ],
+      "timeoutSeconds": 30
+    },
+    "fieldkit.offline_ocr": {
+      "packages": [
+        "tesseract-ocr",
+        "tesseract-ocr-data-eng"
+      ],
+      "inputs": [
+        "input.png"
+      ],
+      "timeoutSeconds": 60
+    },
+    "fieldkit.shell_review": {
+      "packages": [
+        "shellcheck",
+        "shfmt"
+      ],
+      "inputs": [
+        "input.sh"
+      ],
+      "timeoutSeconds": 30
+    },
+    "fieldkit.json_summary": {
+      "packages": [
+        "jq"
+      ],
+      "inputs": [
+        "input.json"
+      ],
+      "timeoutSeconds": 20
+    },
+    "fieldkit.sqlite_check": {
+      "packages": [
+        "sqlite"
+      ],
+      "inputs": [
+        "input.db"
+      ],
+      "timeoutSeconds": 30
+    },
+    "fieldkit.text_diff": {
+      "packages": [
+        "diffutils"
+      ],
+      "inputs": [
+        "before.txt",
+        "after.txt"
+      ],
+      "timeoutSeconds": 20
+    },
+    "fieldkit.zip_inventory": {
+      "packages": [
+        "unzip"
+      ],
+      "inputs": [
+        "input.zip"
+      ],
+      "timeoutSeconds": 20
+    },
+    "fieldkit.signature_verify": {
+      "packages": [
+        "minisign"
+      ],
+      "inputs": [
+        "input.bin",
+        "signer.pub",
+        "input.minisig"
+      ],
+      "timeoutSeconds": 30
+    },
+    "fieldkit.zstd_check": {
+      "packages": [
+        "zstd"
+      ],
+      "inputs": [
+        "input.zst"
+      ],
+      "timeoutSeconds": 30
+    },
+    "fieldkit.yara_match": {
+      "packages": [
+        "yara"
+      ],
+      "inputs": [
+        "rules.yar",
+        "input.bin"
+      ],
+      "timeoutSeconds": 20
+    },
+    "fieldkit.timeline_summary": {
+      "packages": [
+        "jq"
+      ],
+      "inputs": [
+        "events.json"
+      ],
+      "timeoutSeconds": 20
+    },
+    "fieldkit.ffuf_loopback": {
+      "packages": [
+        "ffuf"
+      ],
+      "inputs": [
+        "words.txt"
+      ],
+      "timeoutSeconds": 30
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "schema": "qp1ng.marketplace.package.v1",
+  "id": "qscenario.fieldkit.data_health",
+  "kind": "scenario",
+  "name": "Field Kit: Check Local Data",
+  "summary": "Check input.json, then input.db using the reviewed JSON Structure Summary and SQLite Read-Only Check tools. Stops if an action fails; the final result is the database report.",
+  "category": "Field Kit workflows",
+  "risk": "MEDIUM",
+  "version": 1,
+  "scenario": {
+    "id": "qscenario.fieldkit.data_health",
+    "name": "Field Kit: Check Local Data",
+    "description": "Check input.json, then input.db using the reviewed JSON Structure Summary and SQLite Read-Only Check tools. Stops if an action fails; the final result is the database report.",
+    "enabled": false,
+    "trigger": {
+      "type": "MANUAL",
+      "label": "Manual",
+      "expression": ""
+    },
+    "conditions": [],
+    "actions": [
+      {
+        "type": "RUN_ACTION_FORGE_TOOL",
+        "toolId": "fieldkit.json_summary",
+        "timeoutMs": 90000
+      },
+      {
+        "type": "RUN_ACTION_FORGE_TOOL",
+        "toolId": "fieldkit.sqlite_check",
+        "timeoutMs": 90000
+      }
+    ],
+    "createdAtMs": 0,
+    "updatedAtMs": 0,
+    "lastRunAtMs": null,
+    "runCount": 0
+  },
+  "files": {}
+}

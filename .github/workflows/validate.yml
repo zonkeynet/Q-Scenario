@@ -1,5 +1,10 @@
 name: Validate catalog
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
+    # Bot-created drafts do not trigger workflows with GITHUB_TOKEN. A maintainer's
+    # Ready for review action must start validation before the protected merge.
+    types: [opened, synchronize, reopened, ready_for_review]
 permissions:
   contents: read
 jobs:

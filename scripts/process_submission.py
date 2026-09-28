@@ -27,7 +27,7 @@ def main():
     repository=os.environ['GITHUB_REPOSITORY']
     require(re.fullmatch(r'[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+',repository),'Repository')
     token=os.environ['GITHUB_TOKEN']
-    def api(path, data=None):
+    def api(path, data=None, missing_ok=False):
         req=urllib.request.Request('https://api.github.com/repos/'+repository+path,
             data=None if data is None else json.dumps(data).encode(), headers={'Authorization':'Bearer '+token,
             'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28','Content-Type':'application/json'})
@@ -35,6 +35,8 @@ def main():
             with urllib.request.urlopen(req,timeout=30) as response:
                 raw=response.read(2097153);require(len(raw)<=2097152,'API response size');return json.loads(raw)
         except urllib.error.HTTPError as error:
+            if missing_ok and error.code == 404:
+                return None
             raise RuntimeError('GitHub request failed with status '+str(error.code)) from None
     # Re-check label on the live issue. Edits still produce a draft PR and never bypass maintainer review.
     current=api('/issues/'+str(issue['number']))
@@ -60,8 +62,16 @@ def main():
     tree=api('/git/trees',{'base_tree':commit['tree']['sha'],'tree':[
         {'path':relative,'mode':'100644','type':'blob','content':data.decode()},
         {'path':'index.json','mode':'100644','type':'blob','content':index.decode()}]})
-    new_commit=api('/git/commits',{'message':'Review marketplace submission #'+str(issue['number']),'tree':tree['sha'],'parents':[base]})
-    api('/git/refs',{'ref':'refs/heads/'+branch,'sha':new_commit['sha']})
+    # A transient failure or a disabled Actions PR permission can occur after the branch
+    # is created. Retry safely, without overwriting somebody else's branch or duplicating PRs.
+    ref=api('/git/ref/heads/'+branch, missing_ok=True)
+    if ref is None:
+        new_commit=api('/git/commits',{'message':'Review marketplace submission #'+str(issue['number']),'tree':tree['sha'],'parents':[base]})
+        api('/git/refs',{'ref':'refs/heads/'+branch,'sha':new_commit['sha']})
+    else:
+        previous=api('/git/commits/'+ref['object']['sha'])
+        require(previous['tree']['sha']==tree['sha'] and [p['sha'] for p in previous['parents']]==[base],
+            'Existing proposal branch differs; maintainer review required')
     api('/pulls',{'title':'Review marketplace submission #'+str(issue['number']),'head':branch,
         'base':event['repository']['default_branch'],'draft':True,
         'body':'Generated from issue #'+str(issue['number'])+'. JSON validation is not a security audit. Review every action, network destination, permission and embedded script before marking ready and merging. Nothing has been executed.'})

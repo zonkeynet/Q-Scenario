@@ -27,6 +27,7 @@ An exported package must be your work or have a license compatible with this rep
 - Enable Issues and Actions. Create the `marketplace-submission` label.
 - In Settings → Actions → General → Workflow permissions, enable **Allow GitHub Actions to create and approve pull requests**. The workflow only creates draft PRs; it never approves them.
 - Protect `main`: require a human review and the catalog validation check. Require code-owner review for workflow changes. Do not approve a PR solely because its schema passed.
+- After reviewing a bot draft, mark it **Ready for review** to trigger validation. GitHub suppresses automatic workflow cascades for PRs created with `GITHUB_TOKEN`; this explicit human event runs the check before merge. If a temporary error occurs after branch creation, reapply the label to retry the same proposal safely.
 - Inspect every script, destination, permission and destructive operation. Test in an isolated profile with fictitious data. Reject secrets and misleading risk labels.
 - For existing IDs, increment `version`. Updates must not reduce safety controls. The app never silently replaces installed user work.
 

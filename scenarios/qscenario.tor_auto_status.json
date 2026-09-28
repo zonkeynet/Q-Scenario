@@ -1,0 +1,65 @@
+{
+  "schema": "qp1ng.marketplace.package.v1",
+  "id": "qscenario.tor_auto_status",
+  "kind": "scenario",
+  "name": "Tor Auto Status",
+  "summary": "Example automatic trigger fired when the Tor circuit becomes ready.",
+  "category": "Field automation",
+  "risk": "LOW",
+  "version": 1,
+  "scenario": {
+    "id": "qscenario.tor_auto_status",
+    "name": "Tor Auto Status",
+    "description": "Example automatic trigger fired when the Tor circuit becomes ready.",
+    "enabled": false,
+    "trigger": {
+      "type": "TOR_CIRCUIT_READY",
+      "label": "Tor ready",
+      "expression": ""
+    },
+    "conditions": [],
+    "actions": [
+      {
+        "type": "SET_QVAR",
+        "name": "%Q_LAST_TOR_READY",
+        "value": "%Q_DATE_TIME",
+        "title": "",
+        "text": "",
+        "toolId": "",
+        "storeResultIn": "",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      },
+      {
+        "type": "LOG_TO_VAULT",
+        "name": "tor_events",
+        "value": "Tor ready at %Q_LAST_TOR_READY exit=%Q_TOR_EXIT ip=%Q_TOR_EXIT_IP socks=%Q_TOR_SOCKS_PORT",
+        "title": "",
+        "text": "",
+        "toolId": "",
+        "storeResultIn": "",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      },
+      {
+        "type": "SHOW_NOTIFICATION",
+        "name": "",
+        "value": "",
+        "title": "Tor ready",
+        "text": "Exit=%Q_TOR_EXIT socks=%Q_TOR_SOCKS_PORT time=%Q_TIME",
+        "toolId": "",
+        "storeResultIn": "",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      }
+    ],
+    "createdAtMs": 0,
+    "updatedAtMs": 0,
+    "lastRunAtMs": null,
+    "runCount": 0
+  },
+  "files": {}
+}

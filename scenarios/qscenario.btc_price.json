@@ -1,0 +1,149 @@
+{
+  "schema": "qp1ng.marketplace.package.v1",
+  "id": "qscenario.btc_price",
+  "kind": "scenario",
+  "name": "BTC Price Check",
+  "summary": "Manual Tor-routed BTC price fetch. Extracts USD from the JSON response and shows it in the notification.",
+  "category": "Field automation",
+  "risk": "MEDIUM",
+  "version": 1,
+  "scenario": {
+    "id": "qscenario.btc_price",
+    "name": "BTC Price Check",
+    "description": "Manual Tor-routed BTC price fetch. Extracts USD from the JSON response and shows it in the notification.",
+    "enabled": false,
+    "trigger": {
+      "type": "MANUAL",
+      "label": "Manual",
+      "expression": ""
+    },
+    "conditions": [],
+    "actions": [
+      {
+        "type": "FETCH_VIA_TOR",
+        "name": "",
+        "value": "https://mempool.space/api/v1/prices",
+        "title": "",
+        "text": "",
+        "toolId": "",
+        "storeResultIn": "%Q_MEMPOOL_RESP",
+        "by": 1,
+        "timeoutMs": 20000,
+        "channelOrTag": ""
+      },
+      {
+        "type": "REGEX_TRANSFORM",
+        "name": "%Q_MEMPOOL_RESP",
+        "value": "\"USD\"\\s*:\\s*[0-9.]+",
+        "title": "",
+        "text": "",
+        "toolId": "",
+        "storeResultIn": "%Q_BTC_USD_PAIR",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      },
+      {
+        "type": "REGEX_TRANSFORM",
+        "name": "%Q_BTC_USD_PAIR",
+        "value": "[^0-9.]=>",
+        "title": "",
+        "text": "",
+        "toolId": "",
+        "storeResultIn": "%Q_BTC_USD",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      },
+      {
+        "type": "IF_CONDITION",
+        "name": "",
+        "value": "qvar:%Q_BTC_USD:isNotEmpty",
+        "title": "",
+        "text": "",
+        "toolId": "",
+        "storeResultIn": "",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      },
+      {
+        "type": "SHOW_NOTIFICATION",
+        "name": "",
+        "value": "",
+        "title": "Bitcoin Price",
+        "text": "[BTC] BTC/USD  $%Q_BTC_USD\n[TOR] %Q_TOR_STATUS  SOCKS %Q_TOR_SOCKS_PORT\n[TIME] %Q_TIME",
+        "toolId": "",
+        "storeResultIn": "",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      },
+      {
+        "type": "LOG_TO_VAULT",
+        "name": "btc_price_checks",
+        "value": "[BTC] %Q_DATE_TIME price_usd=$%Q_BTC_USD tor=%Q_TOR_STATUS socks=%Q_TOR_SOCKS_PORT",
+        "title": "",
+        "text": "",
+        "toolId": "",
+        "storeResultIn": "",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      },
+      {
+        "type": "ELSE_BRANCH",
+        "name": "",
+        "value": "",
+        "title": "",
+        "text": "",
+        "toolId": "",
+        "storeResultIn": "",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      },
+      {
+        "type": "SHOW_NOTIFICATION",
+        "name": "",
+        "value": "",
+        "title": "Bitcoin Price",
+        "text": "[WARN] Price unavailable\n[TOR] %Q_TOR_STATUS  SOCKS %Q_TOR_SOCKS_PORT\n[RAW] %Q_MEMPOOL_RESP|take:120|",
+        "toolId": "",
+        "storeResultIn": "",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      },
+      {
+        "type": "LOG_TO_VAULT",
+        "name": "btc_price_checks",
+        "value": "[BTC][WARN] %Q_DATE_TIME price unavailable tor=%Q_TOR_STATUS raw=%Q_MEMPOOL_RESP|take:220|",
+        "title": "",
+        "text": "",
+        "toolId": "",
+        "storeResultIn": "",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      },
+      {
+        "type": "END_IF",
+        "name": "",
+        "value": "",
+        "title": "",
+        "text": "",
+        "toolId": "",
+        "storeResultIn": "",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      }
+    ],
+    "createdAtMs": 0,
+    "updatedAtMs": 0,
+    "lastRunAtMs": null,
+    "runCount": 0
+  },
+  "files": {}
+}

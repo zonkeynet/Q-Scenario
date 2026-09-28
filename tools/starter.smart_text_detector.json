@@ -1,0 +1,126 @@
+{
+  "id": "starter.smart_text_detector",
+  "name": "Smart Text Detector",
+  "summary": "Classifies selected text as hash, URL, onion, BTC address, seed phrase or code.",
+  "category": "Utility",
+  "risk": "LOW",
+  "files": {
+    "manifest.json": {
+      "schema": "qp1ng.tool.v1",
+      "id": "starter.smart_text_detector",
+      "name": "Smart Text Detector",
+      "version": "0.1.0",
+      "author": "local",
+      "category": "workspace",
+      "description": "Classifies selected text as hash, URL, onion, BTC address, seed phrase or code.",
+      "icon": {
+        "type": "auto",
+        "glyph": "terminal",
+        "accent": "cyan"
+      },
+      "permissions": {
+        "sandboxExecution": true,
+        "workspaceRead": false,
+        "workspaceWrite": false,
+        "network": false,
+        "keyboardShortcut": true,
+        "chatBubble": true,
+        "androidAction": false,
+        "securityLab": false
+      },
+      "network": null,
+      "securityLab": null,
+      "inputs": [
+        {
+          "name": "selection",
+          "type": "template",
+          "value": "{{selection.text}}",
+          "required": false
+        }
+      ],
+      "risk": null,
+      "executionMode": null,
+      "policy": {
+        "risk": "LOW",
+        "executionMode": "MANUAL_ONLY",
+        "networkDefault": false
+      }
+    },
+    "actions.json": {
+      "schema": "qp1ng.flow.v1",
+      "nodes": [
+        {
+          "id": "input",
+          "type": "input.selection",
+          "config": {},
+          "outputs": [
+            {
+              "id": "out",
+              "targets": [
+                "process:in"
+              ]
+            }
+          ],
+          "position": null
+        },
+        {
+          "id": "process",
+          "type": "process.python",
+          "config": {
+            "script": "import base64, re\ntext = base64.b64decode(\"{{selection.text.b64}}\").decode(\"utf-8\", \"replace\").strip()\nkind = \"plain text\"\nrisk = \"LOW\"\nif re.fullmatch(r\"[0-9a-fA-F]{64}\", text): kind = \"SHA-256 / 64-char hex\"\nelif re.fullmatch(r\"[a-z2-7]{56}\\.onion\", text): kind = \"Tor onion address\"\nelif re.match(r\"https?://\", text): kind = \"URL\"\nelif re.match(r\"(bc1|[13])[A-Za-z0-9]{20,}\", text): kind = \"Bitcoin address\"\nelif len(re.findall(r\"[a-z]+\", text.lower())) in (12, 24):\n    kind = \"possible seed phrase\"; risk = \"CRITICAL\"\nelif any(token in text for token in [\"def \", \"class \", \"function \", \"const \", \"#!/bin/\"]):\n    kind = \"code\"\nprint(\"SMART TEXT DETECTOR\")\nprint(f\"Type: {kind}\")\nprint(f\"Risk: {risk}\")\nprint(f\"Chars: {len(text)}\")\nif risk == \"CRITICAL\":\n    print(\"Do not send this text in chat. Move it to a protected vault if needed.\")",
+            "timeout": 30
+          },
+          "outputs": [
+            {
+              "id": "out",
+              "targets": [
+                "output:in"
+              ]
+            },
+            {
+              "id": "error",
+              "targets": [
+                "error:in"
+              ]
+            }
+          ],
+          "position": null
+        },
+        {
+          "id": "output",
+          "type": "output.chat_bubble",
+          "config": {},
+          "outputs": [],
+          "position": null
+        },
+        {
+          "id": "error",
+          "type": "output.error",
+          "config": {},
+          "outputs": [],
+          "position": null
+        }
+      ],
+      "metadata": {
+        "name": "Smart Text Detector",
+        "description": "Starter catalog tool.",
+        "createdBy": "qp1ng-starter-catalog",
+        "version": 1
+      }
+    },
+    "bubble.json": {
+      "schema": "qp1ng.bubble.v1",
+      "title": "Smart Text Detector",
+      "style": "code_output",
+      "language": "python",
+      "showCommand": true,
+      "showExitCode": true,
+      "showRuntime": true,
+      "showAddToChat": true
+    }
+  },
+  "schema": "qp1ng.marketplace.package.v1",
+  "kind": "tool",
+  "version": 1,
+  "scenario": null
+}

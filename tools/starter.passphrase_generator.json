@@ -1,0 +1,126 @@
+{
+  "id": "starter.passphrase_generator",
+  "name": "Passphrase Generator",
+  "summary": "Generates a local high-entropy passphrase and compact backup code.",
+  "category": "Offline utility",
+  "risk": "LOW",
+  "files": {
+    "manifest.json": {
+      "schema": "qp1ng.tool.v1",
+      "id": "starter.passphrase_generator",
+      "name": "Passphrase Generator",
+      "version": "0.1.0",
+      "author": "local",
+      "category": "workspace",
+      "description": "Generates a local high-entropy passphrase and compact backup code.",
+      "icon": {
+        "type": "auto",
+        "glyph": "terminal",
+        "accent": "cyan"
+      },
+      "permissions": {
+        "sandboxExecution": true,
+        "workspaceRead": false,
+        "workspaceWrite": false,
+        "network": false,
+        "keyboardShortcut": true,
+        "chatBubble": true,
+        "androidAction": false,
+        "securityLab": false
+      },
+      "network": null,
+      "securityLab": null,
+      "inputs": [
+        {
+          "name": "selection",
+          "type": "template",
+          "value": "{{selection.text}}",
+          "required": false
+        }
+      ],
+      "risk": null,
+      "executionMode": null,
+      "policy": {
+        "risk": "LOW",
+        "executionMode": "MANUAL_ONLY",
+        "networkDefault": false
+      }
+    },
+    "actions.json": {
+      "schema": "qp1ng.flow.v1",
+      "nodes": [
+        {
+          "id": "input",
+          "type": "input.selection",
+          "config": {},
+          "outputs": [
+            {
+              "id": "out",
+              "targets": [
+                "process:in"
+              ]
+            }
+          ],
+          "position": null
+        },
+        {
+          "id": "process",
+          "type": "process.python",
+          "config": {
+            "script": "import secrets, string\nwords = [\n    \"anchor\",\"binary\",\"cobalt\",\"delta\",\"ember\",\"frost\",\"grid\",\"harbor\",\n    \"ion\",\"jade\",\"kernel\",\"lunar\",\"matrix\",\"north\",\"omega\",\"pulse\",\n    \"quartz\",\"raven\",\"signal\",\"tangent\",\"umbra\",\"vector\",\"wild\",\"zenith\"\n]\nphrase = \"-\".join(secrets.choice(words) for _ in range(28))\nalphabet = string.ascii_letters + string.digits\ncode = \"\".join(secrets.choice(alphabet) for _ in range(18))\nprint(\"PASSPHRASE GENERATOR\")\nprint(\"Phrase: \" + phrase)\nprint(\"Backup: \" + code)\nprint(\"Entropy class: strong local random\")",
+            "timeout": 30
+          },
+          "outputs": [
+            {
+              "id": "out",
+              "targets": [
+                "output:in"
+              ]
+            },
+            {
+              "id": "error",
+              "targets": [
+                "error:in"
+              ]
+            }
+          ],
+          "position": null
+        },
+        {
+          "id": "output",
+          "type": "output.chat_bubble",
+          "config": {},
+          "outputs": [],
+          "position": null
+        },
+        {
+          "id": "error",
+          "type": "output.error",
+          "config": {},
+          "outputs": [],
+          "position": null
+        }
+      ],
+      "metadata": {
+        "name": "Passphrase Generator",
+        "description": "Starter catalog tool.",
+        "createdBy": "qp1ng-starter-catalog",
+        "version": 1
+      }
+    },
+    "bubble.json": {
+      "schema": "qp1ng.bubble.v1",
+      "title": "Passphrase Generator",
+      "style": "code_output",
+      "language": "python",
+      "showCommand": true,
+      "showExitCode": true,
+      "showRuntime": true,
+      "showAddToChat": true
+    }
+  },
+  "schema": "qp1ng.marketplace.package.v1",
+  "kind": "tool",
+  "version": 1,
+  "scenario": null
+}

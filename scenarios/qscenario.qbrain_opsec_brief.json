@@ -1,0 +1,53 @@
+{
+  "schema": "qp1ng.marketplace.package.v1",
+  "id": "qscenario.qbrain_opsec_brief",
+  "kind": "scenario",
+  "name": "Q-Brain OPSEC Brief",
+  "summary": "Asks the local model for a short operational checklist using live Q-P1NG variables.",
+  "category": "Field automation",
+  "risk": "HIGH",
+  "version": 1,
+  "scenario": {
+    "id": "qscenario.qbrain_opsec_brief",
+    "name": "Q-Brain OPSEC Brief",
+    "description": "Asks the local model for a short operational checklist using live Q-P1NG variables.",
+    "enabled": false,
+    "trigger": {
+      "type": "MANUAL",
+      "label": "Manual Q-Brain brief",
+      "expression": ""
+    },
+    "conditions": [],
+    "actions": [
+      {
+        "type": "ASK_QBRAIN",
+        "name": "",
+        "value": "Create a concise 5-point OPSEC checklist for this status: Tor=%Q_TOR_STATUS, exit=%Q_TOR_EXIT_IP, battery=%Q_BATTERY%, BLE peers=%Q_BLE_PEER_COUNT, LoRa=%Q_LORA_READY, security=%Q_SECURITY_LEVEL. Keep it practical and do not mention unavailable tools.",
+        "title": "",
+        "text": "",
+        "toolId": "",
+        "storeResultIn": "%Q_QBRAIN_OPSEC_BRIEF",
+        "by": 1,
+        "timeoutMs": 45000,
+        "channelOrTag": ""
+      },
+      {
+        "type": "SEND_CHAT_BUBBLE",
+        "name": "",
+        "value": "",
+        "title": "Q-Brain OPSEC Brief",
+        "text": "%Q_QBRAIN_OPSEC_BRIEF",
+        "toolId": "",
+        "storeResultIn": "",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      }
+    ],
+    "createdAtMs": 0,
+    "updatedAtMs": 0,
+    "lastRunAtMs": null,
+    "runCount": 0
+  },
+  "files": {}
+}

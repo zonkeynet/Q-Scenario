@@ -1,0 +1,126 @@
+{
+  "id": "starter.clipboard_security_scan",
+  "name": "Clipboard Security Scanner",
+  "summary": "Scans Q-P1NG secure clipboard text for keys, seeds, cards and onion addresses.",
+  "category": "Phone security",
+  "risk": "MEDIUM",
+  "files": {
+    "manifest.json": {
+      "schema": "qp1ng.tool.v1",
+      "id": "starter.clipboard_security_scan",
+      "name": "Clipboard Security Scanner",
+      "version": "0.1.0",
+      "author": "local",
+      "category": "workspace",
+      "description": "Scans Q-P1NG secure clipboard text for keys, seeds, cards and onion addresses.",
+      "icon": {
+        "type": "auto",
+        "glyph": "terminal",
+        "accent": "gold"
+      },
+      "permissions": {
+        "sandboxExecution": true,
+        "workspaceRead": false,
+        "workspaceWrite": false,
+        "network": false,
+        "keyboardShortcut": true,
+        "chatBubble": true,
+        "androidAction": false,
+        "securityLab": false
+      },
+      "network": null,
+      "securityLab": null,
+      "inputs": [
+        {
+          "name": "selection",
+          "type": "template",
+          "value": "{{selection.text}}",
+          "required": false
+        }
+      ],
+      "risk": null,
+      "executionMode": null,
+      "policy": {
+        "risk": "MEDIUM",
+        "executionMode": "MANUAL_ONLY",
+        "networkDefault": false
+      }
+    },
+    "actions.json": {
+      "schema": "qp1ng.flow.v1",
+      "nodes": [
+        {
+          "id": "input",
+          "type": "input.clipboard",
+          "config": {},
+          "outputs": [
+            {
+              "id": "out",
+              "targets": [
+                "process:in"
+              ]
+            }
+          ],
+          "position": null
+        },
+        {
+          "id": "process",
+          "type": "process.python",
+          "config": {
+            "script": "import base64, re\ntext = base64.b64decode(\"{{clipboard.text.b64}}\").decode(\"utf-8\", \"replace\").strip()\nfindings = []\npatterns = [\n    (\"BTC private key WIF\", r\"\\b[5KL][1-9A-HJ-NP-Za-km-z]{50,51}\\b\"),\n    (\"64-char hex secret/hash\", r\"\\b[0-9a-fA-F]{64}\\b\"),\n    (\"credit-card-like number\", r\"\\b\\d{4}[- ]?\\d{4}[- ]?\\d{4}[- ]?\\d{4}\\b\"),\n    (\"onion address\", r\"\\b[a-z2-7]{56}\\.onion\\b\"),\n    (\"private key block\", r\"-----BEGIN [A-Z ]*PRIVATE KEY-----\"),\n]\nwords = re.findall(r\"[a-z]+\", text.lower())\nif len(words) in (12, 24): findings.append(\"possible seed phrase word count\")\nfor label, pattern in patterns:\n    if re.search(pattern, text): findings.append(label)\nprint(\"CLIPBOARD SECURITY SCAN\")\nif findings:\n    print(\"Status: ALERT\")\n    for f in findings: print(\"- \" + f)\n    print(\"Recommendation: wipe clipboard after use or save only in encrypted vault.\")\nelse:\n    print(\"Status: CLEAN\")\n    print(\"No common sensitive pattern detected.\")",
+            "timeout": 30
+          },
+          "outputs": [
+            {
+              "id": "out",
+              "targets": [
+                "output:in"
+              ]
+            },
+            {
+              "id": "error",
+              "targets": [
+                "error:in"
+              ]
+            }
+          ],
+          "position": null
+        },
+        {
+          "id": "output",
+          "type": "output.chat_bubble",
+          "config": {},
+          "outputs": [],
+          "position": null
+        },
+        {
+          "id": "error",
+          "type": "output.error",
+          "config": {},
+          "outputs": [],
+          "position": null
+        }
+      ],
+      "metadata": {
+        "name": "Clipboard Security Scanner",
+        "description": "Starter catalog tool.",
+        "createdBy": "qp1ng-starter-catalog",
+        "version": 1
+      }
+    },
+    "bubble.json": {
+      "schema": "qp1ng.bubble.v1",
+      "title": "Clipboard Security Scanner",
+      "style": "code_output",
+      "language": "python",
+      "showCommand": true,
+      "showExitCode": true,
+      "showRuntime": true,
+      "showAddToChat": true
+    }
+  },
+  "schema": "qp1ng.marketplace.package.v1",
+  "kind": "tool",
+  "version": 1,
+  "scenario": null
+}

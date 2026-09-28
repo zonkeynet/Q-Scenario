@@ -1,0 +1,126 @@
+{
+  "id": "starter.jwt_inspector",
+  "name": "JWT Inspector",
+  "summary": "Decodes JWT header/payload offline without verifying signature.",
+  "category": "Developer tool",
+  "risk": "LOW",
+  "files": {
+    "manifest.json": {
+      "schema": "qp1ng.tool.v1",
+      "id": "starter.jwt_inspector",
+      "name": "JWT Inspector",
+      "version": "0.1.0",
+      "author": "local",
+      "category": "workspace",
+      "description": "Decodes JWT header/payload offline without verifying signature.",
+      "icon": {
+        "type": "auto",
+        "glyph": "terminal",
+        "accent": "cyan"
+      },
+      "permissions": {
+        "sandboxExecution": true,
+        "workspaceRead": false,
+        "workspaceWrite": false,
+        "network": false,
+        "keyboardShortcut": true,
+        "chatBubble": true,
+        "androidAction": false,
+        "securityLab": false
+      },
+      "network": null,
+      "securityLab": null,
+      "inputs": [
+        {
+          "name": "selection",
+          "type": "template",
+          "value": "{{selection.text}}",
+          "required": false
+        }
+      ],
+      "risk": null,
+      "executionMode": null,
+      "policy": {
+        "risk": "LOW",
+        "executionMode": "MANUAL_ONLY",
+        "networkDefault": false
+      }
+    },
+    "actions.json": {
+      "schema": "qp1ng.flow.v1",
+      "nodes": [
+        {
+          "id": "input",
+          "type": "input.selection",
+          "config": {},
+          "outputs": [
+            {
+              "id": "out",
+              "targets": [
+                "process:in"
+              ]
+            }
+          ],
+          "position": null
+        },
+        {
+          "id": "process",
+          "type": "process.python",
+          "config": {
+            "script": "import base64, json\nraw = base64.b64decode(\"{{selection.text.b64}}\").decode(\"utf-8\", \"replace\").strip()\nprint(\"JWT INSPECTOR\")\nparts = raw.split(\".\")\nif len(parts) < 2:\n    print(\"Selected text is not a JWT.\")\n    raise SystemExit\ndef decode(part):\n    pad = \"=\" * (-len(part) % 4)\n    return json.loads(base64.urlsafe_b64decode(part + pad))\ntry:\n    header = decode(parts[0])\n    payload = decode(parts[1])\n    print(\"Header:\")\n    print(json.dumps(header, indent=2, sort_keys=True))\n    print(\"\\nPayload:\")\n    print(json.dumps(payload, indent=2, sort_keys=True))\n    print(\"\\nSignature: present\" if len(parts) > 2 and parts[2] else \"\\nSignature: missing\")\n    print(\"Note: signature is NOT verified by this offline inspector.\")\nexcept Exception as e:\n    print(\"Decode failed: \" + str(e))",
+            "timeout": 30
+          },
+          "outputs": [
+            {
+              "id": "out",
+              "targets": [
+                "output:in"
+              ]
+            },
+            {
+              "id": "error",
+              "targets": [
+                "error:in"
+              ]
+            }
+          ],
+          "position": null
+        },
+        {
+          "id": "output",
+          "type": "output.chat_bubble",
+          "config": {},
+          "outputs": [],
+          "position": null
+        },
+        {
+          "id": "error",
+          "type": "output.error",
+          "config": {},
+          "outputs": [],
+          "position": null
+        }
+      ],
+      "metadata": {
+        "name": "JWT Inspector",
+        "description": "Starter catalog tool.",
+        "createdBy": "qp1ng-starter-catalog",
+        "version": 1
+      }
+    },
+    "bubble.json": {
+      "schema": "qp1ng.bubble.v1",
+      "title": "JWT Inspector",
+      "style": "code_output",
+      "language": "python",
+      "showCommand": true,
+      "showExitCode": true,
+      "showRuntime": true,
+      "showAddToChat": true
+    }
+  },
+  "schema": "qp1ng.marketplace.package.v1",
+  "kind": "tool",
+  "version": 1,
+  "scenario": null
+}

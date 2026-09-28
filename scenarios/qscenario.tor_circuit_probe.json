@@ -1,0 +1,89 @@
+{
+  "schema": "qp1ng.marketplace.package.v1",
+  "id": "qscenario.tor_circuit_probe",
+  "kind": "scenario",
+  "name": "Tor Circuit Probe",
+  "summary": "Manual Tor health probe using the app dynamic SOCKS port, then extracts the reported exit IP.",
+  "category": "Field automation",
+  "risk": "MEDIUM",
+  "version": 1,
+  "scenario": {
+    "id": "qscenario.tor_circuit_probe",
+    "name": "Tor Circuit Probe",
+    "description": "Manual Tor health probe using the app dynamic SOCKS port, then extracts the reported exit IP.",
+    "enabled": false,
+    "trigger": {
+      "type": "MANUAL",
+      "label": "Manual Tor probe",
+      "expression": ""
+    },
+    "conditions": [],
+    "actions": [
+      {
+        "type": "SET_QVAR",
+        "name": "%Q_TOR_PROBE_STARTED",
+        "value": "%Q_DATE_TIME",
+        "title": "",
+        "text": "",
+        "toolId": "",
+        "storeResultIn": "",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      },
+      {
+        "type": "FETCH_VIA_TOR",
+        "name": "",
+        "value": "https://check.torproject.org/api/ip",
+        "title": "",
+        "text": "",
+        "toolId": "",
+        "storeResultIn": "%Q_TOR_PROBE_RESP",
+        "by": 1,
+        "timeoutMs": 20000,
+        "channelOrTag": ""
+      },
+      {
+        "type": "REGEX_TRANSFORM",
+        "name": "%Q_TOR_PROBE_RESP",
+        "value": "\"IP\"\\s*:\\s*\"[^\"]+\"",
+        "title": "",
+        "text": "",
+        "toolId": "",
+        "storeResultIn": "%Q_TOR_PROBE_IP_PAIR",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      },
+      {
+        "type": "REGEX_TRANSFORM",
+        "name": "%Q_TOR_PROBE_IP_PAIR",
+        "value": "[^0-9.]=>",
+        "title": "",
+        "text": "",
+        "toolId": "",
+        "storeResultIn": "%Q_TOR_PROBE_IP",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      },
+      {
+        "type": "SHOW_NOTIFICATION",
+        "name": "",
+        "value": "",
+        "title": "Tor Circuit Probe",
+        "text": "Tor=%Q_TOR_STATUS socks=%Q_TOR_SOCKS_PORT exit=%Q_TOR_PROBE_IP at %Q_TIME",
+        "toolId": "",
+        "storeResultIn": "",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      }
+    ],
+    "createdAtMs": 0,
+    "updatedAtMs": 0,
+    "lastRunAtMs": null,
+    "runCount": 0
+  },
+  "files": {}
+}

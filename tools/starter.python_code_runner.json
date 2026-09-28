@@ -1,0 +1,126 @@
+{
+  "id": "starter.python_code_runner",
+  "name": "Python Code Runner",
+  "summary": "Runs selected Python in Linux Sandbox after Review -> Edit -> Run.",
+  "category": "Developer tool",
+  "risk": "MEDIUM",
+  "files": {
+    "manifest.json": {
+      "schema": "qp1ng.tool.v1",
+      "id": "starter.python_code_runner",
+      "name": "Python Code Runner",
+      "version": "0.1.0",
+      "author": "local",
+      "category": "workspace",
+      "description": "Runs selected Python in Linux Sandbox after Review -> Edit -> Run.",
+      "icon": {
+        "type": "auto",
+        "glyph": "terminal",
+        "accent": "gold"
+      },
+      "permissions": {
+        "sandboxExecution": true,
+        "workspaceRead": false,
+        "workspaceWrite": false,
+        "network": false,
+        "keyboardShortcut": true,
+        "chatBubble": true,
+        "androidAction": false,
+        "securityLab": false
+      },
+      "network": null,
+      "securityLab": null,
+      "inputs": [
+        {
+          "name": "selection",
+          "type": "template",
+          "value": "{{selection.text}}",
+          "required": false
+        }
+      ],
+      "risk": null,
+      "executionMode": null,
+      "policy": {
+        "risk": "MEDIUM",
+        "executionMode": "MANUAL_ONLY",
+        "networkDefault": false
+      }
+    },
+    "actions.json": {
+      "schema": "qp1ng.flow.v1",
+      "nodes": [
+        {
+          "id": "input",
+          "type": "input.selection",
+          "config": {},
+          "outputs": [
+            {
+              "id": "out",
+              "targets": [
+                "process:in"
+              ]
+            }
+          ],
+          "position": null
+        },
+        {
+          "id": "process",
+          "type": "process.python",
+          "config": {
+            "script": "import base64, contextlib, io, traceback\ncode = base64.b64decode(\"{{selection.text.b64}}\").decode(\"utf-8\", \"replace\")\nout = io.StringIO()\nprint(\"PYTHON CODE RUNNER\")\ntry:\n    with contextlib.redirect_stdout(out):\n        exec(code, {\"__name__\": \"__main__\"})\n    print(\"Status: PASS\")\n    captured = out.getvalue().strip()\n    print(captured if captured else \"(no stdout)\")\nexcept Exception:\n    print(\"Status: FAIL\")\n    print(traceback.format_exc(limit=6))",
+            "timeout": 30
+          },
+          "outputs": [
+            {
+              "id": "out",
+              "targets": [
+                "output:in"
+              ]
+            },
+            {
+              "id": "error",
+              "targets": [
+                "error:in"
+              ]
+            }
+          ],
+          "position": null
+        },
+        {
+          "id": "output",
+          "type": "output.chat_bubble",
+          "config": {},
+          "outputs": [],
+          "position": null
+        },
+        {
+          "id": "error",
+          "type": "output.error",
+          "config": {},
+          "outputs": [],
+          "position": null
+        }
+      ],
+      "metadata": {
+        "name": "Python Code Runner",
+        "description": "Starter catalog tool.",
+        "createdBy": "qp1ng-starter-catalog",
+        "version": 1
+      }
+    },
+    "bubble.json": {
+      "schema": "qp1ng.bubble.v1",
+      "title": "Python Code Runner",
+      "style": "code_output",
+      "language": "python",
+      "showCommand": true,
+      "showExitCode": true,
+      "showRuntime": true,
+      "showAddToChat": true
+    }
+  },
+  "schema": "qp1ng.marketplace.package.v1",
+  "kind": "tool",
+  "version": 1,
+  "scenario": null
+}

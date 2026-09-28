@@ -1,0 +1,77 @@
+{
+  "schema": "qp1ng.marketplace.package.v1",
+  "id": "qscenario.offline_mode",
+  "kind": "scenario",
+  "name": "Offline Mode",
+  "summary": "Manual scenario that records an offline-first operating mode.",
+  "category": "Field automation",
+  "risk": "LOW",
+  "version": 1,
+  "scenario": {
+    "id": "qscenario.offline_mode",
+    "name": "Offline Mode",
+    "description": "Manual scenario that records an offline-first operating mode.",
+    "enabled": false,
+    "trigger": {
+      "type": "MANUAL",
+      "label": "Manual",
+      "expression": ""
+    },
+    "conditions": [],
+    "actions": [
+      {
+        "type": "SET_QVAR",
+        "name": "%Q_MODE",
+        "value": "OFFLINE",
+        "title": "",
+        "text": "",
+        "toolId": "",
+        "storeResultIn": "",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      },
+      {
+        "type": "SET_QVAR",
+        "name": "%Q_NETWORK_POLICY",
+        "value": "OFFLINE_FIRST",
+        "title": "",
+        "text": "",
+        "toolId": "",
+        "storeResultIn": "",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      },
+      {
+        "type": "LOG_TO_VAULT",
+        "name": "mode_changes",
+        "value": "OFFLINE mode activated at %Q_DATE_TIME",
+        "title": "",
+        "text": "",
+        "toolId": "",
+        "storeResultIn": "",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      },
+      {
+        "type": "SHOW_NOTIFICATION",
+        "name": "",
+        "value": "",
+        "title": "Offline Mode active",
+        "text": "Mode=%Q_MODE",
+        "toolId": "",
+        "storeResultIn": "",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      }
+    ],
+    "createdAtMs": 0,
+    "updatedAtMs": 0,
+    "lastRunAtMs": null,
+    "runCount": 0
+  },
+  "files": {}
+}

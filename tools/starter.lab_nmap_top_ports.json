@@ -1,0 +1,139 @@
+{
+  "id": "starter.lab_nmap_top_ports",
+  "name": "Lab Nmap Top Ports",
+  "summary": "Reviewed nmap service/version template for a small authorized port set.",
+  "category": "Security Lab",
+  "risk": "HIGH",
+  "files": {
+    "manifest.json": {
+      "schema": "qp1ng.tool.v1",
+      "id": "starter.lab_nmap_top_ports",
+      "name": "Lab Nmap Top Ports",
+      "version": "0.1.0",
+      "author": "local",
+      "category": "security_lab",
+      "description": "Reviewed nmap service/version template for a small authorized port set. Requires Authorized Security Lab mode and explicit Review -> Edit -> Run.",
+      "icon": {
+        "type": "auto",
+        "glyph": "shield",
+        "accent": "gold"
+      },
+      "permissions": {
+        "sandboxExecution": true,
+        "workspaceRead": false,
+        "workspaceWrite": false,
+        "network": false,
+        "keyboardShortcut": true,
+        "chatBubble": true,
+        "androidAction": false,
+        "securityLab": true
+      },
+      "network": null,
+      "securityLab": {
+        "requiresLabMode": true,
+        "requiresTargetAllowlist": true,
+        "maxTargets": 1,
+        "maxPorts": 100,
+        "rateLimit": "low",
+        "noExploit": true
+      },
+      "inputs": [
+        {
+          "name": "selection",
+          "type": "template",
+          "value": "{{selection.text}}",
+          "required": false
+        },
+        {
+          "name": "lab_scope",
+          "type": "template",
+          "value": "Review command and use only authorized targets.",
+          "required": true
+        }
+      ],
+      "risk": null,
+      "executionMode": null,
+      "policy": {
+        "risk": "HIGH",
+        "executionMode": "ASK_EVERY_TIME",
+        "networkDefault": false
+      }
+    },
+    "actions.json": {
+      "schema": "qp1ng.flow.v1",
+      "nodes": [
+        {
+          "id": "input",
+          "type": "input.selection",
+          "config": {},
+          "outputs": [
+            {
+              "id": "out",
+              "targets": [
+                "process:in"
+              ]
+            }
+          ],
+          "position": null
+        },
+        {
+          "id": "process",
+          "type": "process.bash",
+          "config": {
+            "command": "target='127.0.0.1'; ports='22,80,443,8080,8443'; echo 'SECURITY LAB NMAP TOP PORTS'; echo 'Review target and ports before running:' \"$target\" \"$ports\"; command -v nmap >/dev/null 2>&1 || { echo 'nmap missing: install the Security Lab package first.'; exit 0; }; nmap -Pn -sT -sV --version-light -p \"$ports\" --max-retries 1 --host-timeout 60s \"$target\"",
+            "timeout": 60
+          },
+          "outputs": [
+            {
+              "id": "out",
+              "targets": [
+                "output:in"
+              ]
+            },
+            {
+              "id": "error",
+              "targets": [
+                "error:in"
+              ]
+            }
+          ],
+          "position": null
+        },
+        {
+          "id": "output",
+          "type": "output.chat_bubble",
+          "config": {},
+          "outputs": [],
+          "position": null
+        },
+        {
+          "id": "error",
+          "type": "output.error",
+          "config": {},
+          "outputs": [],
+          "position": null
+        }
+      ],
+      "metadata": {
+        "name": "Lab Nmap Top Ports",
+        "description": "Starter catalog tool.",
+        "createdBy": "qp1ng-starter-catalog",
+        "version": 1
+      }
+    },
+    "bubble.json": {
+      "schema": "qp1ng.bubble.v1",
+      "title": "Lab Nmap Top Ports",
+      "style": "lab_report",
+      "language": "bash",
+      "showCommand": true,
+      "showExitCode": true,
+      "showRuntime": true,
+      "showAddToChat": true
+    }
+  },
+  "schema": "qp1ng.marketplace.package.v1",
+  "kind": "tool",
+  "version": 1,
+  "scenario": null
+}

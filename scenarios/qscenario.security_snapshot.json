@@ -1,0 +1,65 @@
+{
+  "schema": "qp1ng.marketplace.package.v1",
+  "id": "qscenario.security_snapshot",
+  "kind": "scenario",
+  "name": "Security Snapshot",
+  "summary": "Manual local snapshot that writes OPSEC state to encrypted notes.",
+  "category": "Field automation",
+  "risk": "HIGH",
+  "version": 1,
+  "scenario": {
+    "id": "qscenario.security_snapshot",
+    "name": "Security Snapshot",
+    "description": "Manual local snapshot that writes OPSEC state to encrypted notes.",
+    "enabled": false,
+    "trigger": {
+      "type": "MANUAL",
+      "label": "Manual",
+      "expression": ""
+    },
+    "conditions": [],
+    "actions": [
+      {
+        "type": "SANDBOX_COMMAND",
+        "name": "",
+        "value": "df /workspace 2>/dev/null | tail -1 | awk '{print $5}'",
+        "title": "",
+        "text": "",
+        "toolId": "",
+        "storeResultIn": "%Q_DISK_USED",
+        "by": 1,
+        "timeoutMs": 15000,
+        "channelOrTag": ""
+      },
+      {
+        "type": "LOG_TO_VAULT",
+        "name": "security_snapshots",
+        "value": "Tor=%Q_TOR_STATUS (%Q_TOR_EXIT), ghost=%Q_GHOST_ACTIVE, security=%Q_SECURITY_LEVEL, peers=%Q_BLE_PEER_COUNT, battery=%Q_BATTERY%, disk=%Q_DISK_USED",
+        "title": "",
+        "text": "",
+        "toolId": "",
+        "storeResultIn": "",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      },
+      {
+        "type": "SHOW_NOTIFICATION",
+        "name": "",
+        "value": "",
+        "title": "Security Snapshot",
+        "text": "Snapshot saved at %Q_DATE_TIME",
+        "toolId": "",
+        "storeResultIn": "",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      }
+    ],
+    "createdAtMs": 0,
+    "updatedAtMs": 0,
+    "lastRunAtMs": null,
+    "runCount": 0
+  },
+  "files": {}
+}

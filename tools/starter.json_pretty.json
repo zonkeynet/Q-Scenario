@@ -1,0 +1,126 @@
+{
+  "id": "starter.json_pretty",
+  "name": "JSON Pretty Validator",
+  "summary": "Formats JSON and reports parser errors without network.",
+  "category": "Developer tool",
+  "risk": "LOW",
+  "files": {
+    "manifest.json": {
+      "schema": "qp1ng.tool.v1",
+      "id": "starter.json_pretty",
+      "name": "JSON Pretty Validator",
+      "version": "0.1.0",
+      "author": "local",
+      "category": "workspace",
+      "description": "Formats JSON and reports parser errors without network.",
+      "icon": {
+        "type": "auto",
+        "glyph": "terminal",
+        "accent": "cyan"
+      },
+      "permissions": {
+        "sandboxExecution": true,
+        "workspaceRead": false,
+        "workspaceWrite": false,
+        "network": false,
+        "keyboardShortcut": true,
+        "chatBubble": true,
+        "androidAction": false,
+        "securityLab": false
+      },
+      "network": null,
+      "securityLab": null,
+      "inputs": [
+        {
+          "name": "selection",
+          "type": "template",
+          "value": "{{selection.text}}",
+          "required": false
+        }
+      ],
+      "risk": null,
+      "executionMode": null,
+      "policy": {
+        "risk": "LOW",
+        "executionMode": "MANUAL_ONLY",
+        "networkDefault": false
+      }
+    },
+    "actions.json": {
+      "schema": "qp1ng.flow.v1",
+      "nodes": [
+        {
+          "id": "input",
+          "type": "input.selection",
+          "config": {},
+          "outputs": [
+            {
+              "id": "out",
+              "targets": [
+                "process:in"
+              ]
+            }
+          ],
+          "position": null
+        },
+        {
+          "id": "process",
+          "type": "process.python",
+          "config": {
+            "script": "import base64, json\nraw = base64.b64decode(\"{{selection.text.b64}}\").decode(\"utf-8\", \"replace\").strip()\nprint(\"JSON VALIDATOR\")\nif not raw:\n    print(\"No selected JSON.\")\n    raise SystemExit\ntry:\n    data = json.loads(raw)\n    pretty = json.dumps(data, indent=2, ensure_ascii=False)\n    print(f\"Status: VALID\")\n    print(f\"Type: {type(data).__name__}\")\n    print()\n    print(pretty[:12000])\nexcept Exception as e:\n    print(\"Status: INVALID\")\n    print(str(e))",
+            "timeout": 30
+          },
+          "outputs": [
+            {
+              "id": "out",
+              "targets": [
+                "output:in"
+              ]
+            },
+            {
+              "id": "error",
+              "targets": [
+                "error:in"
+              ]
+            }
+          ],
+          "position": null
+        },
+        {
+          "id": "output",
+          "type": "output.chat_bubble",
+          "config": {},
+          "outputs": [],
+          "position": null
+        },
+        {
+          "id": "error",
+          "type": "output.error",
+          "config": {},
+          "outputs": [],
+          "position": null
+        }
+      ],
+      "metadata": {
+        "name": "JSON Pretty Validator",
+        "description": "Starter catalog tool.",
+        "createdBy": "qp1ng-starter-catalog",
+        "version": 1
+      }
+    },
+    "bubble.json": {
+      "schema": "qp1ng.bubble.v1",
+      "title": "JSON Pretty Validator",
+      "style": "code_output",
+      "language": "python",
+      "showCommand": true,
+      "showExitCode": true,
+      "showRuntime": true,
+      "showAddToChat": true
+    }
+  },
+  "schema": "qp1ng.marketplace.package.v1",
+  "kind": "tool",
+  "version": 1,
+  "scenario": null
+}

@@ -1,0 +1,101 @@
+{
+  "schema": "qp1ng.marketplace.package.v1",
+  "id": "qscenario.office_mode",
+  "kind": "scenario",
+  "name": "Office Mode",
+  "summary": "Manual scenario for a quieter profile with conservative automation.",
+  "category": "Field automation",
+  "risk": "LOW",
+  "version": 1,
+  "scenario": {
+    "id": "qscenario.office_mode",
+    "name": "Office Mode",
+    "description": "Manual scenario for a quieter profile with conservative automation.",
+    "enabled": false,
+    "trigger": {
+      "type": "MANUAL",
+      "label": "Manual",
+      "expression": ""
+    },
+    "conditions": [],
+    "actions": [
+      {
+        "type": "SET_QVAR",
+        "name": "%Q_MODE",
+        "value": "OFFICE",
+        "title": "",
+        "text": "",
+        "toolId": "",
+        "storeResultIn": "",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      },
+      {
+        "type": "SET_QVAR",
+        "name": "%Q_AUTO_GHOST_UNKNOWN_BLE",
+        "value": "false",
+        "title": "",
+        "text": "",
+        "toolId": "",
+        "storeResultIn": "",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      },
+      {
+        "type": "SET_QVAR",
+        "name": "%Q_NFC_HCE_ACTIVE",
+        "value": "false",
+        "title": "",
+        "text": "",
+        "toolId": "",
+        "storeResultIn": "",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      },
+      {
+        "type": "SET_QVAR",
+        "name": "%Q_BLE_SCAN_MODE",
+        "value": "passive",
+        "title": "",
+        "text": "",
+        "toolId": "",
+        "storeResultIn": "",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      },
+      {
+        "type": "LOG_TO_VAULT",
+        "name": "mode_changes",
+        "value": "OFFICE mode activated at %Q_DATE_TIME",
+        "title": "",
+        "text": "",
+        "toolId": "",
+        "storeResultIn": "",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      },
+      {
+        "type": "SHOW_NOTIFICATION",
+        "name": "",
+        "value": "",
+        "title": "Office Mode active",
+        "text": "Mode=%Q_MODE",
+        "toolId": "",
+        "storeResultIn": "",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      }
+    ],
+    "createdAtMs": 0,
+    "updatedAtMs": 0,
+    "lastRunAtMs": null,
+    "runCount": 0
+  },
+  "files": {}
+}

@@ -1,0 +1,139 @@
+{
+  "id": "starter.lab_tcpdump_host_snapshot",
+  "name": "Lab Tcpdump Host Snapshot",
+  "summary": "Reviewed tcpdump template: capture 20 packets for one authorized host filter.",
+  "category": "Security Lab",
+  "risk": "HIGH",
+  "files": {
+    "manifest.json": {
+      "schema": "qp1ng.tool.v1",
+      "id": "starter.lab_tcpdump_host_snapshot",
+      "name": "Lab Tcpdump Host Snapshot",
+      "version": "0.1.0",
+      "author": "local",
+      "category": "security_lab",
+      "description": "Reviewed tcpdump template: capture 20 packets for one authorized host filter. Requires Authorized Security Lab mode and explicit Review -> Edit -> Run.",
+      "icon": {
+        "type": "auto",
+        "glyph": "shield",
+        "accent": "gold"
+      },
+      "permissions": {
+        "sandboxExecution": true,
+        "workspaceRead": false,
+        "workspaceWrite": false,
+        "network": false,
+        "keyboardShortcut": true,
+        "chatBubble": true,
+        "androidAction": false,
+        "securityLab": true
+      },
+      "network": null,
+      "securityLab": {
+        "requiresLabMode": true,
+        "requiresTargetAllowlist": true,
+        "maxTargets": 1,
+        "maxPorts": 100,
+        "rateLimit": "low",
+        "noExploit": true
+      },
+      "inputs": [
+        {
+          "name": "selection",
+          "type": "template",
+          "value": "{{selection.text}}",
+          "required": false
+        },
+        {
+          "name": "lab_scope",
+          "type": "template",
+          "value": "Review command and use only authorized targets.",
+          "required": true
+        }
+      ],
+      "risk": null,
+      "executionMode": null,
+      "policy": {
+        "risk": "HIGH",
+        "executionMode": "ASK_EVERY_TIME",
+        "networkDefault": false
+      }
+    },
+    "actions.json": {
+      "schema": "qp1ng.flow.v1",
+      "nodes": [
+        {
+          "id": "input",
+          "type": "input.selection",
+          "config": {},
+          "outputs": [
+            {
+              "id": "out",
+              "targets": [
+                "process:in"
+              ]
+            }
+          ],
+          "position": null
+        },
+        {
+          "id": "process",
+          "type": "process.bash",
+          "config": {
+            "command": "target='127.0.0.1'; echo 'SECURITY LAB TCPDUMP HOST SNAPSHOT'; echo 'Review and edit host filter before running. Host:' \"$target\"; command -v tcpdump >/dev/null 2>&1 || { echo 'tcpdump missing: install the Security Lab package first.'; exit 0; }; tcpdump -i any -nn -c 20 host \"$target\" || { echo; echo 'tcpdump could not capture packets in this Android sandbox profile.'; echo 'Tip: keep this as a reviewable template, or switch to nmap/netcat checks when packet capture is not permitted.'; exit 0; }",
+            "timeout": 60
+          },
+          "outputs": [
+            {
+              "id": "out",
+              "targets": [
+                "output:in"
+              ]
+            },
+            {
+              "id": "error",
+              "targets": [
+                "error:in"
+              ]
+            }
+          ],
+          "position": null
+        },
+        {
+          "id": "output",
+          "type": "output.chat_bubble",
+          "config": {},
+          "outputs": [],
+          "position": null
+        },
+        {
+          "id": "error",
+          "type": "output.error",
+          "config": {},
+          "outputs": [],
+          "position": null
+        }
+      ],
+      "metadata": {
+        "name": "Lab Tcpdump Host Snapshot",
+        "description": "Starter catalog tool.",
+        "createdBy": "qp1ng-starter-catalog",
+        "version": 1
+      }
+    },
+    "bubble.json": {
+      "schema": "qp1ng.bubble.v1",
+      "title": "Lab Tcpdump Host Snapshot",
+      "style": "lab_report",
+      "language": "bash",
+      "showCommand": true,
+      "showExitCode": true,
+      "showRuntime": true,
+      "showAddToChat": true
+    }
+  },
+  "schema": "qp1ng.marketplace.package.v1",
+  "kind": "tool",
+  "version": 1,
+  "scenario": null
+}

@@ -1,0 +1,53 @@
+{
+  "schema": "qp1ng.marketplace.package.v1",
+  "id": "qscenario.daily_opsec_draft",
+  "kind": "scenario",
+  "name": "Daily OPSEC Briefing Draft",
+  "summary": "Safe draft for a future scheduled briefing. It snapshots local built-in variables only.",
+  "category": "Field automation",
+  "risk": "LOW",
+  "version": 1,
+  "scenario": {
+    "id": "qscenario.daily_opsec_draft",
+    "name": "Daily OPSEC Briefing Draft",
+    "description": "Safe draft for a future scheduled briefing. It snapshots local built-in variables only.",
+    "enabled": false,
+    "trigger": {
+      "type": "MANUAL",
+      "label": "Manual draft",
+      "expression": ""
+    },
+    "conditions": [],
+    "actions": [
+      {
+        "type": "SET_QVAR",
+        "name": "%Q_LAST_OPSEC_CHECK",
+        "value": "%Q_DATE_TIME",
+        "title": "",
+        "text": "",
+        "toolId": "",
+        "storeResultIn": "",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      },
+      {
+        "type": "SHOW_NOTIFICATION",
+        "name": "",
+        "value": "",
+        "title": "OPSEC snapshot",
+        "text": "Battery=%Q_BATTERY, mode=%Q_MODE, time=%Q_TIME",
+        "toolId": "",
+        "storeResultIn": "",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      }
+    ],
+    "createdAtMs": 0,
+    "updatedAtMs": 0,
+    "lastRunAtMs": null,
+    "runCount": 0
+  },
+  "files": {}
+}

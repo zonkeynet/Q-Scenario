@@ -1,0 +1,41 @@
+{
+  "schema": "qp1ng.marketplace.package.v1",
+  "id": "qscenario.python_sdk_demo",
+  "kind": "scenario",
+  "name": "Python SDK Demo",
+  "summary": "Community developer example: import qp1ng, read/write QVars and emit scenario output.",
+  "category": "Field automation",
+  "risk": "HIGH",
+  "version": 1,
+  "scenario": {
+    "id": "qscenario.python_sdk_demo",
+    "name": "Python SDK Demo",
+    "description": "Community developer example: import qp1ng, read/write QVars and emit scenario output.",
+    "enabled": false,
+    "trigger": {
+      "type": "MANUAL",
+      "label": "Manual SDK",
+      "expression": ""
+    },
+    "conditions": [],
+    "actions": [
+      {
+        "type": "SANDBOX_PYTHON",
+        "name": "",
+        "value": "import qp1ng\n\nmode = qp1ng.get_var('MODE', 'NORMAL')\ntor = qp1ng.get_var('TOR_STATUS', 'UNKNOWN')\nresult = f'SDK OK | mode={mode} tor={tor}'\n\nqp1ng.set_var('PYTHON_SDK_LAST_RESULT', result)\nqp1ng.notify('Q-P1NG Python SDK', result)\nqp1ng.output(result)",
+        "title": "",
+        "text": "",
+        "toolId": "",
+        "storeResultIn": "%Q_PYTHON_SDK_STDOUT",
+        "by": 1,
+        "timeoutMs": 20000,
+        "channelOrTag": ""
+      }
+    ],
+    "createdAtMs": 0,
+    "updatedAtMs": 0,
+    "lastRunAtMs": null,
+    "runCount": 0
+  },
+  "files": {}
+}

@@ -1,0 +1,126 @@
+{
+  "id": "starter.yara_skeleton_builder",
+  "name": "YARA Skeleton Builder",
+  "summary": "Turns selected suspicious strings into a reviewable defensive YARA rule draft.",
+  "category": "Security utility",
+  "risk": "LOW",
+  "files": {
+    "manifest.json": {
+      "schema": "qp1ng.tool.v1",
+      "id": "starter.yara_skeleton_builder",
+      "name": "YARA Skeleton Builder",
+      "version": "0.1.0",
+      "author": "local",
+      "category": "workspace",
+      "description": "Turns selected suspicious strings into a reviewable defensive YARA rule draft.",
+      "icon": {
+        "type": "auto",
+        "glyph": "terminal",
+        "accent": "cyan"
+      },
+      "permissions": {
+        "sandboxExecution": true,
+        "workspaceRead": false,
+        "workspaceWrite": false,
+        "network": false,
+        "keyboardShortcut": true,
+        "chatBubble": true,
+        "androidAction": false,
+        "securityLab": false
+      },
+      "network": null,
+      "securityLab": null,
+      "inputs": [
+        {
+          "name": "selection",
+          "type": "template",
+          "value": "{{selection.text}}",
+          "required": false
+        }
+      ],
+      "risk": null,
+      "executionMode": null,
+      "policy": {
+        "risk": "LOW",
+        "executionMode": "MANUAL_ONLY",
+        "networkDefault": false
+      }
+    },
+    "actions.json": {
+      "schema": "qp1ng.flow.v1",
+      "nodes": [
+        {
+          "id": "input",
+          "type": "input.selection",
+          "config": {},
+          "outputs": [
+            {
+              "id": "out",
+              "targets": [
+                "process:in"
+              ]
+            }
+          ],
+          "position": null
+        },
+        {
+          "id": "process",
+          "type": "process.python",
+          "config": {
+            "script": "import base64, re, hashlib\ntext = base64.b64decode(\"{{selection.text.b64}}\").decode(\"utf-8\", \"replace\")\ntokens = []\nfor token in re.findall(r\"[A-Za-z0-9_./:@-]{4,80}\", text):\n    if token.lower() in {\"http\", \"https\", \"user\", \"password\", \"token\"}:\n        continue\n    tokens.append(token)\nunique = []\nfor token in tokens:\n    if token not in unique:\n        unique.append(token)\nunique = unique[:12]\nrule_id = hashlib.sha256(text.encode(\"utf-8\", \"replace\")).hexdigest()[:10]\nprint(\"YARA SKELETON BUILDER\")\nif not unique:\n    print(\"No useful strings detected in selected text.\")\n    raise SystemExit\nprint(f\"rule qp1ng_triage_{rule_id} {{\")\nprint(\"    meta:\")\nprint(\"        author = \\\"Q-P1NG Action Forge\\\"\")\nprint(\"        purpose = \\\"defensive triage draft\\\"\")\nprint(\"    strings:\")\nfor idx, token in enumerate(unique, 1):\n    escaped = token.replace(\"\\\\\", \"\\\\\\\\\").replace(\"\\\"\", \"\\\\\\\"\")\n    print(f\"        ${idx} = \\\"{escaped}\\\" ascii wide\")\nprint(\"    condition:\")\nprint(\"        2 of them\")\nprint(\"}\")\nprint()\nprint(\"Review strings and scope before using this rule in a lab.\")",
+            "timeout": 30
+          },
+          "outputs": [
+            {
+              "id": "out",
+              "targets": [
+                "output:in"
+              ]
+            },
+            {
+              "id": "error",
+              "targets": [
+                "error:in"
+              ]
+            }
+          ],
+          "position": null
+        },
+        {
+          "id": "output",
+          "type": "output.chat_bubble",
+          "config": {},
+          "outputs": [],
+          "position": null
+        },
+        {
+          "id": "error",
+          "type": "output.error",
+          "config": {},
+          "outputs": [],
+          "position": null
+        }
+      ],
+      "metadata": {
+        "name": "YARA Skeleton Builder",
+        "description": "Starter catalog tool.",
+        "createdBy": "qp1ng-starter-catalog",
+        "version": 1
+      }
+    },
+    "bubble.json": {
+      "schema": "qp1ng.bubble.v1",
+      "title": "YARA Skeleton Builder",
+      "style": "code_output",
+      "language": "python",
+      "showCommand": true,
+      "showExitCode": true,
+      "showRuntime": true,
+      "showAddToChat": true
+    }
+  },
+  "schema": "qp1ng.marketplace.package.v1",
+  "kind": "tool",
+  "version": 1,
+  "scenario": null
+}

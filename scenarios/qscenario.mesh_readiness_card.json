@@ -1,0 +1,53 @@
+{
+  "schema": "qp1ng.marketplace.package.v1",
+  "id": "qscenario.mesh_readiness_card",
+  "kind": "scenario",
+  "name": "Mesh Readiness Card",
+  "summary": "Local readiness card for BLE, LoRa and Ghost mode without sending network traffic.",
+  "category": "Field automation",
+  "risk": "HIGH",
+  "version": 1,
+  "scenario": {
+    "id": "qscenario.mesh_readiness_card",
+    "name": "Mesh Readiness Card",
+    "description": "Local readiness card for BLE, LoRa and Ghost mode without sending network traffic.",
+    "enabled": false,
+    "trigger": {
+      "type": "MANUAL",
+      "label": "Manual mesh readiness",
+      "expression": ""
+    },
+    "conditions": [],
+    "actions": [
+      {
+        "type": "SEND_CHAT_BUBBLE",
+        "name": "",
+        "value": "",
+        "title": "Mesh Readiness",
+        "text": "BLE peers=%Q_BLE_PEER_COUNT\nLoRa ready=%Q_LORA_READY\nGhost active=%Q_GHOST_ACTIVE\nLast peer=%Q_LAST_PEER_HASH|take:16|",
+        "toolId": "",
+        "storeResultIn": "",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      },
+      {
+        "type": "LOG_TO_VAULT",
+        "name": "mesh_readiness_checks",
+        "value": "%Q_DATE_TIME ble=%Q_BLE_PEER_COUNT lora=%Q_LORA_READY ghost=%Q_GHOST_ACTIVE lastPeer=%Q_LAST_PEER_HASH|take:16|",
+        "title": "",
+        "text": "",
+        "toolId": "",
+        "storeResultIn": "",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      }
+    ],
+    "createdAtMs": 0,
+    "updatedAtMs": 0,
+    "lastRunAtMs": null,
+    "runCount": 0
+  },
+  "files": {}
+}

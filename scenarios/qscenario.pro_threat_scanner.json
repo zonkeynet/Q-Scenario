@@ -1,0 +1,161 @@
+{
+  "schema": "qp1ng.marketplace.package.v1",
+  "id": "qscenario.pro_threat_scanner",
+  "kind": "scenario",
+  "name": "Pro Threat Scanner",
+  "summary": "Example Pro pipeline using IF blocks, math QVars and hashing without Python.",
+  "category": "Field automation",
+  "risk": "LOW",
+  "version": 1,
+  "scenario": {
+    "id": "qscenario.pro_threat_scanner",
+    "name": "Pro Threat Scanner",
+    "description": "Example Pro pipeline using IF blocks, math QVars and hashing without Python.",
+    "enabled": false,
+    "trigger": {
+      "type": "MANUAL",
+      "label": "Manual Pro",
+      "expression": ""
+    },
+    "conditions": [],
+    "actions": [
+      {
+        "type": "SET_QVAR",
+        "name": "%Q_THREAT_SCORE",
+        "value": "0",
+        "title": "",
+        "text": "",
+        "toolId": "",
+        "storeResultIn": "",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      },
+      {
+        "type": "IF_CONDITION",
+        "name": "",
+        "value": "%Q_TOR_STATUS equals:CONNECTED",
+        "title": "",
+        "text": "",
+        "toolId": "",
+        "storeResultIn": "",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      },
+      {
+        "type": "MATH_QVAR",
+        "name": "%Q_THREAT_SCORE",
+        "value": "+1",
+        "title": "",
+        "text": "",
+        "toolId": "",
+        "storeResultIn": "",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      },
+      {
+        "type": "ELSE_BRANCH",
+        "name": "",
+        "value": "",
+        "title": "",
+        "text": "",
+        "toolId": "",
+        "storeResultIn": "",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      },
+      {
+        "type": "MATH_QVAR",
+        "name": "%Q_THREAT_SCORE",
+        "value": "+5",
+        "title": "",
+        "text": "",
+        "toolId": "",
+        "storeResultIn": "",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      },
+      {
+        "type": "END_IF",
+        "name": "",
+        "value": "",
+        "title": "",
+        "text": "",
+        "toolId": "",
+        "storeResultIn": "",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      },
+      {
+        "type": "IF_CONDITION",
+        "name": "",
+        "value": "%Q_BLE_PEER_COUNT > 0",
+        "title": "",
+        "text": "",
+        "toolId": "",
+        "storeResultIn": "",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      },
+      {
+        "type": "MATH_QVAR",
+        "name": "%Q_THREAT_SCORE",
+        "value": "+2",
+        "title": "",
+        "text": "",
+        "toolId": "",
+        "storeResultIn": "",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      },
+      {
+        "type": "END_IF",
+        "name": "",
+        "value": "",
+        "title": "",
+        "text": "",
+        "toolId": "",
+        "storeResultIn": "",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      },
+      {
+        "type": "HASH_TEXT",
+        "name": "SHA-256",
+        "value": "tor=%Q_TOR_STATUS peers=%Q_BLE_PEER_COUNT ghost=%Q_GHOST_ACTIVE score=%Q_THREAT_SCORE",
+        "title": "",
+        "text": "",
+        "toolId": "",
+        "storeResultIn": "%Q_LAST_THREAT_HASH",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      },
+      {
+        "type": "SHOW_NOTIFICATION",
+        "name": "",
+        "value": "",
+        "title": "Pro Threat Scanner",
+        "text": "Score=%Q_THREAT_SCORE hash=%Q_LAST_THREAT_HASH|take:12|",
+        "toolId": "",
+        "storeResultIn": "",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      }
+    ],
+    "createdAtMs": 0,
+    "updatedAtMs": 0,
+    "lastRunAtMs": null,
+    "runCount": 0
+  },
+  "files": {}
+}

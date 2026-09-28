@@ -1,0 +1,77 @@
+{
+  "schema": "qp1ng.marketplace.package.v1",
+  "id": "qscenario.split_join_demo",
+  "kind": "scenario",
+  "name": "Split / Join QVar Demo",
+  "summary": "Example Pro array workflow using indexed QVars and a joined output.",
+  "category": "Field automation",
+  "risk": "HIGH",
+  "version": 1,
+  "scenario": {
+    "id": "qscenario.split_join_demo",
+    "name": "Split / Join QVar Demo",
+    "description": "Example Pro array workflow using indexed QVars and a joined output.",
+    "enabled": false,
+    "trigger": {
+      "type": "MANUAL",
+      "label": "Manual array ops",
+      "expression": ""
+    },
+    "conditions": [],
+    "actions": [
+      {
+        "type": "SET_QVAR",
+        "name": "%Q_ROUTE_CSV",
+        "value": "tor,ble,lora,vault",
+        "title": "",
+        "text": "",
+        "toolId": "",
+        "storeResultIn": "",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      },
+      {
+        "type": "SPLIT_QVAR",
+        "name": "%Q_ROUTE_CSV",
+        "value": "",
+        "title": "",
+        "text": "",
+        "toolId": "",
+        "storeResultIn": "%Q_ROUTE",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ","
+      },
+      {
+        "type": "JOIN_QVAR",
+        "name": "%Q_ROUTE",
+        "value": "4",
+        "title": "",
+        "text": "",
+        "toolId": "",
+        "storeResultIn": "%Q_ROUTE_PATH",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": " -> "
+      },
+      {
+        "type": "SEND_CHAT_BUBBLE",
+        "name": "",
+        "value": "",
+        "title": "Route Path",
+        "text": "Path: %Q_ROUTE_PATH | parts=%Q_ROUTE_COUNT",
+        "toolId": "",
+        "storeResultIn": "",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      }
+    ],
+    "createdAtMs": 0,
+    "updatedAtMs": 0,
+    "lastRunAtMs": null,
+    "runCount": 0
+  },
+  "files": {}
+}

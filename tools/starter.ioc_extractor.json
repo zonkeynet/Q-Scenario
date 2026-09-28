@@ -1,0 +1,126 @@
+{
+  "id": "starter.ioc_extractor",
+  "name": "IOC Extractor",
+  "summary": "Extracts hashes, IPs, domains, onions and URLs from selected incident text.",
+  "category": "Security utility",
+  "risk": "LOW",
+  "files": {
+    "manifest.json": {
+      "schema": "qp1ng.tool.v1",
+      "id": "starter.ioc_extractor",
+      "name": "IOC Extractor",
+      "version": "0.1.0",
+      "author": "local",
+      "category": "workspace",
+      "description": "Extracts hashes, IPs, domains, onions and URLs from selected incident text.",
+      "icon": {
+        "type": "auto",
+        "glyph": "terminal",
+        "accent": "cyan"
+      },
+      "permissions": {
+        "sandboxExecution": true,
+        "workspaceRead": false,
+        "workspaceWrite": false,
+        "network": false,
+        "keyboardShortcut": true,
+        "chatBubble": true,
+        "androidAction": false,
+        "securityLab": false
+      },
+      "network": null,
+      "securityLab": null,
+      "inputs": [
+        {
+          "name": "selection",
+          "type": "template",
+          "value": "{{selection.text}}",
+          "required": false
+        }
+      ],
+      "risk": null,
+      "executionMode": null,
+      "policy": {
+        "risk": "LOW",
+        "executionMode": "MANUAL_ONLY",
+        "networkDefault": false
+      }
+    },
+    "actions.json": {
+      "schema": "qp1ng.flow.v1",
+      "nodes": [
+        {
+          "id": "input",
+          "type": "input.selection",
+          "config": {},
+          "outputs": [
+            {
+              "id": "out",
+              "targets": [
+                "process:in"
+              ]
+            }
+          ],
+          "position": null
+        },
+        {
+          "id": "process",
+          "type": "process.python",
+          "config": {
+            "script": "import base64, re\ntext = base64.b64decode(\"{{selection.text.b64}}\").decode(\"utf-8\", \"replace\")\npatterns = {\n    \"urls\": r\"https?://[^\\s'\\\"<>]+\",\n    \"onions\": r\"\\b[a-z2-7]{56}\\.onion\\b\",\n    \"ipv4\": r\"\\b(?:\\d{1,3}\\.){3}\\d{1,3}\\b\",\n    \"domains\": r\"\\b(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,}\\b\",\n    \"sha256\": r\"\\b[a-fA-F0-9]{64}\\b\",\n    \"sha1\": r\"\\b[a-fA-F0-9]{40}\\b\",\n    \"md5\": r\"\\b[a-fA-F0-9]{32}\\b\",\n}\nprint(\"IOC EXTRACTOR\")\ntotal = 0\nfor label, pattern in patterns.items():\n    values = sorted(set(re.findall(pattern, text, flags=re.IGNORECASE)))[:40]\n    total += len(values)\n    print(f\"\\n[{label}] {len(values)}\")\n    for value in values:\n        print(\"- \" + value)\nif total == 0:\n    print(\"No common IOCs detected.\")",
+            "timeout": 30
+          },
+          "outputs": [
+            {
+              "id": "out",
+              "targets": [
+                "output:in"
+              ]
+            },
+            {
+              "id": "error",
+              "targets": [
+                "error:in"
+              ]
+            }
+          ],
+          "position": null
+        },
+        {
+          "id": "output",
+          "type": "output.chat_bubble",
+          "config": {},
+          "outputs": [],
+          "position": null
+        },
+        {
+          "id": "error",
+          "type": "output.error",
+          "config": {},
+          "outputs": [],
+          "position": null
+        }
+      ],
+      "metadata": {
+        "name": "IOC Extractor",
+        "description": "Starter catalog tool.",
+        "createdBy": "qp1ng-starter-catalog",
+        "version": 1
+      }
+    },
+    "bubble.json": {
+      "schema": "qp1ng.bubble.v1",
+      "title": "IOC Extractor",
+      "style": "code_output",
+      "language": "python",
+      "showCommand": true,
+      "showExitCode": true,
+      "showRuntime": true,
+      "showAddToChat": true
+    }
+  },
+  "schema": "qp1ng.marketplace.package.v1",
+  "kind": "tool",
+  "version": 1,
+  "scenario": null
+}

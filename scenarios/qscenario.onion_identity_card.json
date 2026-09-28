@@ -1,0 +1,41 @@
+{
+  "schema": "qp1ng.marketplace.package.v1",
+  "id": "qscenario.onion_identity_card",
+  "kind": "scenario",
+  "name": "Onion Identity Card",
+  "summary": "Builds a local chat card with current onion identity, Tor state and dynamic port variables.",
+  "category": "Field automation",
+  "risk": "HIGH",
+  "version": 1,
+  "scenario": {
+    "id": "qscenario.onion_identity_card",
+    "name": "Onion Identity Card",
+    "description": "Builds a local chat card with current onion identity, Tor state and dynamic port variables.",
+    "enabled": false,
+    "trigger": {
+      "type": "MANUAL",
+      "label": "Manual identity card",
+      "expression": ""
+    },
+    "conditions": [],
+    "actions": [
+      {
+        "type": "SEND_CHAT_BUBBLE",
+        "name": "",
+        "value": "",
+        "title": "Onion Identity Card",
+        "text": "Onion=%Q_MY_ONION\nTor=%Q_TOR_STATUS exit=%Q_TOR_EXIT_IP\nSocks=%Q_TOR_SOCKS_PORT control=%Q_TOR_CONTROL_PORT\nSecurity=%Q_SECURITY_LEVEL",
+        "toolId": "",
+        "storeResultIn": "",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      }
+    ],
+    "createdAtMs": 0,
+    "updatedAtMs": 0,
+    "lastRunAtMs": null,
+    "runCount": 0
+  },
+  "files": {}
+}

@@ -1,0 +1,126 @@
+{
+  "id": "starter.incident_runbook",
+  "name": "Incident Runbook Builder",
+  "summary": "Converts selected incident notes into a concise action checklist.",
+  "category": "Security utility",
+  "risk": "LOW",
+  "files": {
+    "manifest.json": {
+      "schema": "qp1ng.tool.v1",
+      "id": "starter.incident_runbook",
+      "name": "Incident Runbook Builder",
+      "version": "0.1.0",
+      "author": "local",
+      "category": "workspace",
+      "description": "Converts selected incident notes into a concise action checklist.",
+      "icon": {
+        "type": "auto",
+        "glyph": "terminal",
+        "accent": "cyan"
+      },
+      "permissions": {
+        "sandboxExecution": true,
+        "workspaceRead": false,
+        "workspaceWrite": false,
+        "network": false,
+        "keyboardShortcut": true,
+        "chatBubble": true,
+        "androidAction": false,
+        "securityLab": false
+      },
+      "network": null,
+      "securityLab": null,
+      "inputs": [
+        {
+          "name": "selection",
+          "type": "template",
+          "value": "{{selection.text}}",
+          "required": false
+        }
+      ],
+      "risk": null,
+      "executionMode": null,
+      "policy": {
+        "risk": "LOW",
+        "executionMode": "MANUAL_ONLY",
+        "networkDefault": false
+      }
+    },
+    "actions.json": {
+      "schema": "qp1ng.flow.v1",
+      "nodes": [
+        {
+          "id": "input",
+          "type": "input.selection",
+          "config": {},
+          "outputs": [
+            {
+              "id": "out",
+              "targets": [
+                "process:in"
+              ]
+            }
+          ],
+          "position": null
+        },
+        {
+          "id": "process",
+          "type": "process.python",
+          "config": {
+            "script": "import base64, re\ntext = base64.b64decode(\"{{selection.text.b64}}\").decode(\"utf-8\", \"replace\").strip()\nlines = [re.sub(r\"\\s+\", \" \", line).strip(\"-* \") for line in text.splitlines()]\nlines = [line for line in lines if line]\nprint(\"INCIDENT RUNBOOK\")\nif not lines:\n    print(\"No selected notes.\")\n    raise SystemExit\nprint(\"1. Scope\")\nprint(\"   - Confirm affected account/device/service.\")\nprint(\"   - Preserve raw notes and timestamps.\")\nprint(\"2. Containment\")\nprint(\"   - Rotate exposed credentials.\")\nprint(\"   - Disable suspicious sessions or tokens.\")\nprint(\"3. Evidence\")\nfor line in lines[:8]:\n    print(\"   - \" + line[:180])\nprint(\"4. Follow-up\")\nprint(\"   - Add IOCs to monitoring.\")\nprint(\"   - Record final status in encrypted notes.\")",
+            "timeout": 30
+          },
+          "outputs": [
+            {
+              "id": "out",
+              "targets": [
+                "output:in"
+              ]
+            },
+            {
+              "id": "error",
+              "targets": [
+                "error:in"
+              ]
+            }
+          ],
+          "position": null
+        },
+        {
+          "id": "output",
+          "type": "output.chat_bubble",
+          "config": {},
+          "outputs": [],
+          "position": null
+        },
+        {
+          "id": "error",
+          "type": "output.error",
+          "config": {},
+          "outputs": [],
+          "position": null
+        }
+      ],
+      "metadata": {
+        "name": "Incident Runbook Builder",
+        "description": "Starter catalog tool.",
+        "createdBy": "qp1ng-starter-catalog",
+        "version": 1
+      }
+    },
+    "bubble.json": {
+      "schema": "qp1ng.bubble.v1",
+      "title": "Incident Runbook Builder",
+      "style": "code_output",
+      "language": "python",
+      "showCommand": true,
+      "showExitCode": true,
+      "showRuntime": true,
+      "showAddToChat": true
+    }
+  },
+  "schema": "qp1ng.marketplace.package.v1",
+  "kind": "tool",
+  "version": 1,
+  "scenario": null
+}

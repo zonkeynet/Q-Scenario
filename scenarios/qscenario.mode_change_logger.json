@@ -1,0 +1,53 @@
+{
+  "schema": "qp1ng.marketplace.package.v1",
+  "id": "qscenario.mode_change_logger",
+  "kind": "scenario",
+  "name": "Mode Change Logger",
+  "summary": "Example QVar trigger that logs every change to %Q_MODE.",
+  "category": "Field automation",
+  "risk": "LOW",
+  "version": 1,
+  "scenario": {
+    "id": "qscenario.mode_change_logger",
+    "name": "Mode Change Logger",
+    "description": "Example QVar trigger that logs every change to %Q_MODE.",
+    "enabled": false,
+    "trigger": {
+      "type": "QVAR_CHANGED",
+      "label": "QVar changed",
+      "expression": "%Q_MODE"
+    },
+    "conditions": [],
+    "actions": [
+      {
+        "type": "LOG_TO_VAULT",
+        "name": "mode_changes",
+        "value": "%Q_DATE_TIME mode changed to %Q_MODE",
+        "title": "",
+        "text": "",
+        "toolId": "",
+        "storeResultIn": "",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      },
+      {
+        "type": "SHOW_NOTIFICATION",
+        "name": "",
+        "value": "",
+        "title": "Mode changed",
+        "text": "Current mode: %Q_MODE",
+        "toolId": "",
+        "storeResultIn": "",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      }
+    ],
+    "createdAtMs": 0,
+    "updatedAtMs": 0,
+    "lastRunAtMs": null,
+    "runCount": 0
+  },
+  "files": {}
+}

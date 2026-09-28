@@ -1,0 +1,121 @@
+{
+  "id": "starter.sha256_text",
+  "name": "SHA-256 Text Hash",
+  "summary": "Offline hash of selected text. No sandbox and no network.",
+  "category": "Offline utility",
+  "risk": "LOW",
+  "files": {
+    "manifest.json": {
+      "schema": "qp1ng.tool.v1",
+      "id": "starter.sha256_text",
+      "name": "SHA-256 Text Hash",
+      "version": "0.1.0",
+      "author": "local",
+      "category": "local",
+      "description": "Offline SHA-256 hash for selected text.",
+      "icon": {
+        "type": "auto",
+        "glyph": "terminal",
+        "accent": "cyan"
+      },
+      "permissions": {
+        "sandboxExecution": false,
+        "workspaceRead": false,
+        "workspaceWrite": false,
+        "network": false,
+        "keyboardShortcut": true,
+        "chatBubble": true,
+        "androidAction": false,
+        "securityLab": false
+      },
+      "network": null,
+      "securityLab": null,
+      "inputs": [],
+      "risk": null,
+      "executionMode": null,
+      "policy": {
+        "risk": "LOW",
+        "executionMode": "OFF",
+        "networkDefault": false
+      }
+    },
+    "actions.json": {
+      "schema": "qp1ng.flow.v1",
+      "nodes": [
+        {
+          "id": "input",
+          "type": "input.selection",
+          "config": {},
+          "outputs": [
+            {
+              "id": "out",
+              "targets": [
+                "hash:in"
+              ]
+            }
+          ],
+          "position": null
+        },
+        {
+          "id": "hash",
+          "type": "process.hash",
+          "config": {
+            "algorithm": "SHA-256"
+          },
+          "outputs": [
+            {
+              "id": "out",
+              "targets": [
+                "format:in"
+              ]
+            }
+          ],
+          "position": null
+        },
+        {
+          "id": "format",
+          "type": "process.template",
+          "config": {
+            "template": "SHA-256\n{{payload}}"
+          },
+          "outputs": [
+            {
+              "id": "out",
+              "targets": [
+                "output:in"
+              ]
+            }
+          ],
+          "position": null
+        },
+        {
+          "id": "output",
+          "type": "output.chat_bubble",
+          "config": {},
+          "outputs": [],
+          "position": null
+        }
+      ],
+      "metadata": {
+        "name": "SHA-256 Text Hash",
+        "description": "Starter catalog tool.",
+        "createdBy": "qp1ng-starter-catalog",
+        "version": 1
+      }
+    },
+    "bubble.json": {
+      "schema": "qp1ng.bubble.v1",
+      "title": "SHA-256 Text Hash",
+      "style": "compact",
+      "language": "text",
+      "showCommand": true,
+      "showExitCode": true,
+      "showRuntime": true,
+      "showAddToChat": true
+    }
+  },
+  "schema": "qp1ng.marketplace.package.v1",
+  "kind": "tool",
+  "version": 1,
+  "scenario": null
+}

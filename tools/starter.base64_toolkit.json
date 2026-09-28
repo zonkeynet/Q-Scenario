@@ -1,0 +1,126 @@
+{
+  "id": "starter.base64_toolkit",
+  "name": "Base64 Toolkit",
+  "summary": "Offline Base64 encoder/decoder with standard and URL-safe variants.",
+  "category": "Developer tool",
+  "risk": "LOW",
+  "files": {
+    "manifest.json": {
+      "schema": "qp1ng.tool.v1",
+      "id": "starter.base64_toolkit",
+      "name": "Base64 Toolkit",
+      "version": "0.1.0",
+      "author": "local",
+      "category": "workspace",
+      "description": "Offline Base64 encoder/decoder with standard and URL-safe variants.",
+      "icon": {
+        "type": "auto",
+        "glyph": "terminal",
+        "accent": "cyan"
+      },
+      "permissions": {
+        "sandboxExecution": true,
+        "workspaceRead": false,
+        "workspaceWrite": false,
+        "network": false,
+        "keyboardShortcut": true,
+        "chatBubble": true,
+        "androidAction": false,
+        "securityLab": false
+      },
+      "network": null,
+      "securityLab": null,
+      "inputs": [
+        {
+          "name": "selection",
+          "type": "template",
+          "value": "{{selection.text}}",
+          "required": false
+        }
+      ],
+      "risk": null,
+      "executionMode": null,
+      "policy": {
+        "risk": "LOW",
+        "executionMode": "MANUAL_ONLY",
+        "networkDefault": false
+      }
+    },
+    "actions.json": {
+      "schema": "qp1ng.flow.v1",
+      "nodes": [
+        {
+          "id": "input",
+          "type": "input.selection",
+          "config": {},
+          "outputs": [
+            {
+              "id": "out",
+              "targets": [
+                "process:in"
+              ]
+            }
+          ],
+          "position": null
+        },
+        {
+          "id": "process",
+          "type": "process.python",
+          "config": {
+            "script": "import base64, binascii\ntext = base64.b64decode(\"{{selection.text.b64}}\").decode(\"utf-8\", \"replace\")\nraw = text.strip()\nprint(\"BASE64 TOOLKIT\")\nif not raw:\n    print(\"No selected text.\")\n    raise SystemExit\n\ndef decode_candidate(label, value, decoder):\n    try:\n        padded = value + \"=\" * (-len(value) % 4)\n        decoded = decoder(padded.encode())\n        preview = decoded.decode(\"utf-8\", \"replace\")\n        printable = sum(1 for ch in preview if ch.isprintable() or ch in \"\\r\\n\\t\")\n        ratio = printable / max(len(preview), 1)\n        print(f\"{label}: decoded {len(decoded)} bytes, printable={ratio:.0%}\")\n        print(preview[:2000])\n    except (binascii.Error, ValueError, UnicodeError):\n        print(f\"{label}: not valid\")\n\nprint(f\"Input chars: {len(raw)}\")\nprint()\ndecode_candidate(\"standard decode\", raw, base64.b64decode)\nprint()\ndecode_candidate(\"url-safe decode\", raw, base64.urlsafe_b64decode)\nprint()\nprint(\"standard encode:\")\nprint(base64.b64encode(text.encode(\"utf-8\")).decode())\nprint()\nprint(\"url-safe encode:\")\nprint(base64.urlsafe_b64encode(text.encode(\"utf-8\")).decode().rstrip(\"=\"))",
+            "timeout": 30
+          },
+          "outputs": [
+            {
+              "id": "out",
+              "targets": [
+                "output:in"
+              ]
+            },
+            {
+              "id": "error",
+              "targets": [
+                "error:in"
+              ]
+            }
+          ],
+          "position": null
+        },
+        {
+          "id": "output",
+          "type": "output.chat_bubble",
+          "config": {},
+          "outputs": [],
+          "position": null
+        },
+        {
+          "id": "error",
+          "type": "output.error",
+          "config": {},
+          "outputs": [],
+          "position": null
+        }
+      ],
+      "metadata": {
+        "name": "Base64 Toolkit",
+        "description": "Starter catalog tool.",
+        "createdBy": "qp1ng-starter-catalog",
+        "version": 1
+      }
+    },
+    "bubble.json": {
+      "schema": "qp1ng.bubble.v1",
+      "title": "Base64 Toolkit",
+      "style": "code_output",
+      "language": "python",
+      "showCommand": true,
+      "showExitCode": true,
+      "showRuntime": true,
+      "showAddToChat": true
+    }
+  },
+  "schema": "qp1ng.marketplace.package.v1",
+  "kind": "tool",
+  "version": 1,
+  "scenario": null
+}

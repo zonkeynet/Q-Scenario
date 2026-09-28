@@ -1,0 +1,77 @@
+{
+  "schema": "qp1ng.marketplace.package.v1",
+  "id": "qscenario.regex_redactor_demo",
+  "kind": "scenario",
+  "name": "Regex Redactor Demo",
+  "summary": "Example Pro string tool: redacts token-like fields from a QVar without Python.",
+  "category": "Field automation",
+  "risk": "LOW",
+  "version": 1,
+  "scenario": {
+    "id": "qscenario.regex_redactor_demo",
+    "name": "Regex Redactor Demo",
+    "description": "Example Pro string tool: redacts token-like fields from a QVar without Python.",
+    "enabled": false,
+    "trigger": {
+      "type": "MANUAL",
+      "label": "Manual string ops",
+      "expression": ""
+    },
+    "conditions": [],
+    "actions": [
+      {
+        "type": "SET_QVAR",
+        "name": "%Q_RAW_SECRET_LINE",
+        "value": "user=alice token=abc123secret endpoint=onion",
+        "title": "",
+        "text": "",
+        "toolId": "",
+        "storeResultIn": "",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      },
+      {
+        "type": "REGEX_TRANSFORM",
+        "name": "%Q_RAW_SECRET_LINE",
+        "value": "token=[^\\s]+=>token=[redacted]",
+        "title": "",
+        "text": "",
+        "toolId": "",
+        "storeResultIn": "%Q_REDACTED_LINE",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      },
+      {
+        "type": "HASH_TEXT",
+        "name": "",
+        "value": "%Q_REDACTED_LINE",
+        "title": "",
+        "text": "",
+        "toolId": "",
+        "storeResultIn": "%Q_REDACTED_HASH",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      },
+      {
+        "type": "SHOW_NOTIFICATION",
+        "name": "",
+        "value": "",
+        "title": "Regex Redactor",
+        "text": "%Q_REDACTED_LINE | hash=%Q_REDACTED_HASH|take:10|",
+        "toolId": "",
+        "storeResultIn": "",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      }
+    ],
+    "createdAtMs": 0,
+    "updatedAtMs": 0,
+    "lastRunAtMs": null,
+    "runCount": 0
+  },
+  "files": {}
+}

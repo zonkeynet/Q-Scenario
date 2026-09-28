@@ -1,0 +1,126 @@
+{
+  "id": "starter.onion_address_inspector",
+  "name": "Onion Address Inspector",
+  "summary": "Validates selected v3 onion text and prints safe Tor workflow reminders.",
+  "category": "OPSEC utility",
+  "risk": "LOW",
+  "files": {
+    "manifest.json": {
+      "schema": "qp1ng.tool.v1",
+      "id": "starter.onion_address_inspector",
+      "name": "Onion Address Inspector",
+      "version": "0.1.0",
+      "author": "local",
+      "category": "workspace",
+      "description": "Validates selected v3 onion text and prints safe Tor workflow reminders.",
+      "icon": {
+        "type": "auto",
+        "glyph": "terminal",
+        "accent": "cyan"
+      },
+      "permissions": {
+        "sandboxExecution": true,
+        "workspaceRead": false,
+        "workspaceWrite": false,
+        "network": false,
+        "keyboardShortcut": true,
+        "chatBubble": true,
+        "androidAction": false,
+        "securityLab": false
+      },
+      "network": null,
+      "securityLab": null,
+      "inputs": [
+        {
+          "name": "selection",
+          "type": "template",
+          "value": "{{selection.text}}",
+          "required": false
+        }
+      ],
+      "risk": null,
+      "executionMode": null,
+      "policy": {
+        "risk": "LOW",
+        "executionMode": "MANUAL_ONLY",
+        "networkDefault": false
+      }
+    },
+    "actions.json": {
+      "schema": "qp1ng.flow.v1",
+      "nodes": [
+        {
+          "id": "input",
+          "type": "input.selection",
+          "config": {},
+          "outputs": [
+            {
+              "id": "out",
+              "targets": [
+                "process:in"
+              ]
+            }
+          ],
+          "position": null
+        },
+        {
+          "id": "process",
+          "type": "process.python",
+          "config": {
+            "script": "import base64, re\ntext = base64.b64decode(\"{{selection.text.b64}}\").decode(\"utf-8\", \"replace\").strip().lower()\nmatch = re.fullmatch(r\"([a-z2-7]{56})\\.onion\", text)\nprint(\"ONION ADDRESS INSPECTOR\")\nif not text:\n    print(\"No selected onion address.\")\n    raise SystemExit\nprint(\"Address: \" + text[:96])\nif match:\n    host = match.group(1)\n    print(\"Version: v3 onion\")\n    print(\"Length: OK\")\n    print(\"Alphabet: OK\")\n    print(\"Short fingerprint: \" + host[:8] + \"...\" + host[-8:])\n    print(\"Q-P1NG tip: use Tor HTTP/Q-Scenario actions so the app follows its dynamic SOCKS port automatically.\")\nelse:\n    print(\"Status: INVALID or unsupported\")\n    print(\"Expected: 56 chars from a-z and 2-7, then .onion\")",
+            "timeout": 30
+          },
+          "outputs": [
+            {
+              "id": "out",
+              "targets": [
+                "output:in"
+              ]
+            },
+            {
+              "id": "error",
+              "targets": [
+                "error:in"
+              ]
+            }
+          ],
+          "position": null
+        },
+        {
+          "id": "output",
+          "type": "output.chat_bubble",
+          "config": {},
+          "outputs": [],
+          "position": null
+        },
+        {
+          "id": "error",
+          "type": "output.error",
+          "config": {},
+          "outputs": [],
+          "position": null
+        }
+      ],
+      "metadata": {
+        "name": "Onion Address Inspector",
+        "description": "Starter catalog tool.",
+        "createdBy": "qp1ng-starter-catalog",
+        "version": 1
+      }
+    },
+    "bubble.json": {
+      "schema": "qp1ng.bubble.v1",
+      "title": "Onion Address Inspector",
+      "style": "code_output",
+      "language": "python",
+      "showCommand": true,
+      "showExitCode": true,
+      "showRuntime": true,
+      "showAddToChat": true
+    }
+  },
+  "schema": "qp1ng.marketplace.package.v1",
+  "kind": "tool",
+  "version": 1,
+  "scenario": null
+}

@@ -1,0 +1,101 @@
+{
+  "schema": "qp1ng.marketplace.package.v1",
+  "id": "qscenario.daily_opsec",
+  "kind": "scenario",
+  "name": "Daily OPSEC Status",
+  "summary": "Manual status snapshot for Tor, BLE, battery and local mode.",
+  "category": "Field automation",
+  "risk": "LOW",
+  "version": 1,
+  "scenario": {
+    "id": "qscenario.daily_opsec",
+    "name": "Daily OPSEC Status",
+    "description": "Manual status snapshot for Tor, BLE, battery and local mode.",
+    "enabled": false,
+    "trigger": {
+      "type": "MANUAL",
+      "label": "Manual",
+      "expression": ""
+    },
+    "conditions": [],
+    "actions": [
+      {
+        "type": "SET_QVAR",
+        "name": "%Q_STATUS_TOR",
+        "value": "%Q_TOR_STATUS",
+        "title": "",
+        "text": "",
+        "toolId": "",
+        "storeResultIn": "",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      },
+      {
+        "type": "SET_QVAR",
+        "name": "%Q_STATUS_EXIT",
+        "value": "%Q_TOR_EXIT",
+        "title": "",
+        "text": "",
+        "toolId": "",
+        "storeResultIn": "",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      },
+      {
+        "type": "SET_QVAR",
+        "name": "%Q_STATUS_PEERS",
+        "value": "%Q_BLE_PEER_COUNT",
+        "title": "",
+        "text": "",
+        "toolId": "",
+        "storeResultIn": "",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      },
+      {
+        "type": "SET_QVAR",
+        "name": "%Q_STATUS_BAT",
+        "value": "%Q_BATTERY",
+        "title": "",
+        "text": "",
+        "toolId": "",
+        "storeResultIn": "",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      },
+      {
+        "type": "SHOW_NOTIFICATION",
+        "name": "",
+        "value": "",
+        "title": "OPSEC Status",
+        "text": "Tor=%Q_STATUS_TOR (%Q_STATUS_EXIT), peers=%Q_STATUS_PEERS, battery=%Q_STATUS_BAT%",
+        "toolId": "",
+        "storeResultIn": "",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      },
+      {
+        "type": "LOG_TO_VAULT",
+        "name": "opsec_daily_log",
+        "value": "Tor=%Q_STATUS_TOR exit=%Q_STATUS_EXIT peers=%Q_STATUS_PEERS battery=%Q_STATUS_BAT%",
+        "title": "",
+        "text": "",
+        "toolId": "",
+        "storeResultIn": "",
+        "by": 1,
+        "timeoutMs": 30000,
+        "channelOrTag": ""
+      }
+    ],
+    "createdAtMs": 0,
+    "updatedAtMs": 0,
+    "lastRunAtMs": null,
+    "runCount": 0
+  },
+  "files": {}
+}

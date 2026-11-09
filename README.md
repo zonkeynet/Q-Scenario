@@ -12,7 +12,12 @@ Open **Q-Scenario / Action Forge → Community marketplace → Refresh catalog v
 
 Reading and downloading require no GitHub account. The app uses its running embedded Tor SOCKS endpoint, with remote DNS, circuit isolation, timeouts, strict size limits, no cookies, no disk HTTP cache, and no direct fallback. Opening the marketplace only reads a previously downloaded catalog from private app storage. Refresh is explicit. Each package is checked against the catalog's SHA-256, byte count, identity and schema.
 
-SHA-256 detects mismatches with the selected catalog; it is not an independent publisher signature. Trust in the catalog currently rests on HTTPS, this repository and human review. A compromised maintainer account could replace both catalog and package. Never assume structural validation proves a script harmless.
+The index is signed by the Q-P1NG publisher (`index.json.sig.json`). The signing key is the AI catalog's key, used under a payload type of its own (`application/vnd.qp1ng.automation-index+json`), so one statement never passes for the other. The app checks it against its built-in root of trust before taking the index, and refuses:
+- an index that is unsigned, or signed by another key;
+- a signature that has expired;
+- an index older than the one it has, or another index carrying a version it already trusts.
+
+In each of those cases the phone keeps the catalog it has. Each package is then checked against the signed index's SHA-256 and byte count, so a compromised GitHub account or repository can no longer replace catalog and packages unnoticed. The signature says who published the catalog, not that a script is harmless: never assume structural validation proves a script harmless.
 
 GitHub is centralized and subject to its own availability, limits and policies. Public hosting and Actions remove the need for a Q-P1NG VPS for this catalog; they are not a guarantee of unlimited free capacity or anonymity. Existing encrypted chat sharing remains available for distributing workflows directly between contacts, including offline transports supported by Q-P1NG.
 
@@ -40,6 +45,19 @@ python -m unittest discover -s tests -v
 python scripts/catalog.py
 python scripts/catalog.py --check
 ```
+
+### Signing the index (after every change to `index.json`, and before the signature expires)
+
+Phones refuse an index whose signature does not match it. After merging any change, sign the new index on the machine that holds the catalog key, outside any repository. Use a version higher than the last one signed, and commit `index.json.sig.json` together with `index.json`:
+
+```sh
+python -I <Q-P1NG>/tools/catalog/catalog_trust.py sign --type automation-index --version <N+1> \
+  --catalog index.json --key <keys>/catalog-1.json --days 180 --out index.json.sig.json
+python -I <Q-P1NG>/tools/catalog/catalog_trust.py verify --type automation-index \
+  --root <Q-P1NG>/app/src/main/assets/ai_catalog_trust/root.json --catalog index.json --sig index.json.sig.json
+```
+
+The statement expires after `--days`. Sign the index again before then, even if it has not changed: a phone refuses an expired signature, so nobody can keep phones on an old catalog forever. Version 1 was signed on 8 November 2026 and expires on 7 May 2027.
 
 The format is strict JSON (not executable YAML), maximum 256 KiB per package/index, maximum 500 catalog entries, nesting depth 32. Paths are derived from validated IDs; entries cannot write workflows or binaries. The privileged submission job checks out only the default branch and reads issue data through the event/API, never shell interpolation. Actions are pinned to a verified upstream commit; no persistent checkout credential is left behind.
 

@@ -1,0 +1,10 @@
+{
+  "payloadType": "application/vnd.qp1ng.automation-index+json",
+  "payload": "eyJfdHlwZSI6ImF1dG9tYXRpb24taW5kZXgiLCJleHBpcmVzIjoiMjAyNy0wNS0wN1QyMzo1NzozNloiLCJzcGVjIjoxLCJ0YXJnZXQiOnsibGVuZ3RoIjozMjkwMiwibmFtZSI6ImluZGV4Lmpzb24iLCJzaGEyNTYiOiI1YmQ0YjdjMmZjZTVkMDRkNjAyZjg1YWQxNzYwMTE1N2JkZjhlNGZlMTVhNGNjMGQxMGY5N2Q4NzVkNmFkMDUzIn0sInZlcnNpb24iOjF9",
+  "signatures": [
+    {
+      "keyid": "fe91f369ec8f3133646cd1d04733ecb290589878257a46a61b6af6413cc016f5",
+      "sig": "F5TIdXrzrPyT73Vl2uCabC0G4em2Eqi8wZrchRnRWSfhSFshOljjXRM+hvI6t4o8y3GkYMrx23z3ByPDxEbvAQ=="
+    }
+  ]
+}
